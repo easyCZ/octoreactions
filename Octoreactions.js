@@ -1,0 +1,55 @@
+
+function Octoreactions(test) {
+  this.test = test;
+  var that = this;
+  $('.table-list-issues li').each(function (i, issue) {
+    debugger;
+    var links = $(issue).find('.issue-title-link');
+    var $header = $(issue).find('.issue-title');
+
+    if (links.length === 0) return;
+
+    that.get(links.attr('href'), function (success, data) {
+      var reactions = $(data).find('.reaction-summary-item[value~="+1"]');
+
+      $header.append('<div>' + reactions.length + '</div>')
+
+      console.log('Reactions:', reactions.length);
+    })
+  })
+
+  // this.issues = document.querySelectorAll('.issue-title-link');
+  // // debugger;
+
+  // var that = this;
+  // [].forEach.call(this.issues, function ($issue) {
+  //   var url = $issue.href;
+  //   // var url = 'https://api.github.com/repos/easyCZ/octoreactions/issues/1/comments';
+
+  //   that.get(url, function (success, data) {
+  //     var reactions = $(data).find('.reaction-summary-item[value~="+1"]');
+
+
+  //     console.log('Reactions:', reactions.length);
+  //   })
+  // })
+  // this.issues.forEach()
+  // console.log(this.issues);
+}
+
+Octoreactions.prototype.get = function get(url, cb) {
+  var request = new XMLHttpRequest();
+  request.open('GET', url, true);
+  // request.setRequestHeader('Accept', 'application/vnd.github.v3+json')
+
+  request.onload = function onload() {
+    if (request.stats >= 200 && request.status < 400) {
+      return cb(false, request.responseText);
+    }
+    return cb(true, request.responseText);
+  }
+
+  return request.send();
+}
+
+window.octoreactions = new Octoreactions();
