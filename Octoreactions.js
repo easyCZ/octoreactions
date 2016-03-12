@@ -5,14 +5,22 @@ function Octoreactions(test) {
   $('.table-list-issues li').each(function (i, issue) {
     debugger;
     var links = $(issue).find('.issue-title-link');
-    var $header = $(issue).find('.issue-title');
+    var $header = $(issue).find('.issue-comments');
 
     if (links.length === 0) return;
 
     that.get(links.attr('href'), function (success, data) {
       var reactions = $(data).find('.reaction-summary-item[value~="+1"]');
 
-      $header.append('<div>' + reactions.length + '</div>')
+      $header.append([
+        '<div class="Octoreactions-Count">',
+          '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png">👍</g-emoji>',
+          '<span>',
+            reactions.length.toString(),
+          '</span>',
+        '</div>'
+      ].join(''))
+      // <g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png">👍</g-emoji>
 
       console.log('Reactions:', reactions.length);
     })

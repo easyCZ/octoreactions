@@ -2,6 +2,11 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 
   if (changeInfo.status !== 'loading') return;
 
+  chrome.tabs.insertCSS(tabId, {
+    file: 'octoreactions.css',
+    runAt: 'document_start'
+  });
+
   chrome.tabs.executeScript(tabId, {
     file: 'jquery-2.2.1.min.js',
     runAt: 'document_start'
