@@ -63,11 +63,15 @@ Octoreactions.prototype.getIssueUrl = function getIssueUrl(owner, repo, issueId)
 }
 
 Octoreactions.prototype.renderIssue = function (issueId) {
+  console.log('RenderIssue:', issueId);
   var url = this.getIssueUrl(this.owner, this.repo, issueId);
   var that = this;
 
   this.getReactions(url, function onGetReactions(count) {
-    var $issueHeader = $('.flex-table-item-primary');
+    var $issueHeader = $('.flex-table-item-primary'),
+        $octoreactions = $('.Octoreactions-Count');
+
+    $octoreactions.remove();
 
     $issueHeader.append([
       '<span class="Octoreactions-Count">',
