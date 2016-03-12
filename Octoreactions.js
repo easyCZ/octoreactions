@@ -90,19 +90,5 @@ Octoreactions.prototype.getReactions = function getReactions(url, cb) {
   })
 }
 
-Octoreactions.prototype.get = function get(url, cb) {
-  var request = new XMLHttpRequest();
-  request.open('GET', url, true);
-  // request.setRequestHeader('Accept', 'application/vnd.github.v3+json')
-
-  request.onload = function onload() {
-    if (request.stats >= 200 && request.status < 400) {
-      return cb(false, request.responseText);
-    }
-    return cb(true, request.responseText);
-  }
-
-  return request.send();
-}
 
 window.octoreactions = new Octoreactions();
