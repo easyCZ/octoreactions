@@ -1,6 +1,6 @@
 
-function Octoreactions(test) {
-  this.test = test;
+function Octoreactions() {
+
   var that = this;
   $('.table-list-issues li').each(function (i, issue) {
     debugger;

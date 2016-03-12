@@ -1,6 +1,8 @@
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 
-  if (changeInfo.status !== 'loading') return;
+  if (changeInfo.status !== 'complete') {
+    return;
+  }
 
   chrome.tabs.insertCSS(tabId, {
     file: 'octoreactions.css',
