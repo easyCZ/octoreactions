@@ -16,9 +16,12 @@ var REACTION_OPTION_SELECTORS = [
 ]
 
 
-function Octoreactions() {
+function Octoreactions(owner, repo) {
 
-  this.renderIssue('easyCZ', 'octoreactions', 1)
+  this.owner = owner;
+  this.repo = repo;
+
+  // this.renderIssue('easyCZ', 'octoreactions', 1)
   // this.getReactions('https://github.com/easyCZ/octoreactions/issues/1', function (count) {
   //   console.log('pluses', count);
   // });
@@ -59,8 +62,8 @@ Octoreactions.prototype.getIssueUrl = function getIssueUrl(owner, repo, issueId)
   ].join('');
 }
 
-Octoreactions.prototype.renderIssue = function (owner, repo, issueId) {
-  var url = this.getIssueUrl(owner, repo, issueId);
+Octoreactions.prototype.renderIssue = function (issueId) {
+  var url = this.getIssueUrl(this.owner, this.repo, issueId);
   var that = this;
 
   this.getReactions(url, function onGetReactions(count) {
@@ -73,6 +76,24 @@ Octoreactions.prototype.renderIssue = function (owner, repo, issueId) {
       '</span>'
     ].join(''))
   })
+}
+
+Octoreactions.prototype.renderIssueList = function (owner, repo, issues) {
+  issues.forEach(function (issue) {
+    var url = this.getIssueUrl(owner, repo, issue);
+
+    this.getReactions(url, function (count) {
+          $header.append([
+        '<div class="Octoreactions-Count">',
+          '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png">👍</g-emoji>',
+          '<span>',
+            reactions.length.toString(),
+          '</span>',
+        '</div>'
+      ].join(''))
+
+    })
+  }.bind(this))
 }
 
 Octoreactions.prototype.getReactions = function getReactions(url, cb) {
@@ -91,4 +112,25 @@ Octoreactions.prototype.getReactions = function getReactions(url, cb) {
 }
 
 
-window.octoreactions = new Octoreactions();
+
+jQuery(document).ready(function ($) {
+  var pathname = window.location.pathname;
+  var tokens = pathname.split('/'),
+      owner = tokens[1],
+      repo = tokens[2];
+
+  if (!window.octoreactions)
+    window.octoreactions = new Octoreactions(owner, repo)
+
+  // Issue detail
+  if (pathname.match(/(\w|\/)*issues\/\d/)) {
+    var issueId = +tokens[tokens.length - 1];
+    octoreactions.renderIssue(issueId)
+  }
+
+  // Issue List
+  else if (pathname.match(/(\w|\/)*issues\//)) {
+
+  }
+
+})
