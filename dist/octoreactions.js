@@ -1,3 +1,5 @@
+'use strict';
+
 var PLUS_SELECTOR = '.reaction-summary-item[value~="+1"]';
 var MINUS_SELECTOR = '.reaction-summary-item[value~="-1"]';
 var SMILE_SELECTOR = '.reaction-summary-item[value~="smile"]';

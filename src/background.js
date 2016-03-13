@@ -1,4 +1,4 @@
-chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
   if (changeInfo.status !== 'complete') {
     return;
@@ -12,7 +12,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   chrome.tabs.executeScript(tabId, {
     file: 'jquery-2.2.1.min.js',
     runAt: 'document_start'
-  }, function () {
+  }, () => {
     chrome.tabs.executeScript(tabId, {
       file: 'Octoreactions.js',
       runAt: 'document_start'
