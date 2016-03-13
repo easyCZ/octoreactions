@@ -4,7 +4,13 @@ var babel = require("gulp-babel");
 var concat = require("gulp-concat");
 
 
-var CONTENT_SCRIPTS = ['src/**/*.js', '!src/background.js']
+var CONTENT_SCRIPTS = [
+  'src/Constants.js',
+  'src/Async.js',
+  'src/Views.js',
+  'src/Octoreactions.js',
+  'src/index.js'
+]
 var BACKGROUND_SCRIPTS = ['src/background.js'];
 
 
@@ -31,6 +37,7 @@ gulp.task('js', ['js:contentscripts', 'js:background']);
 
 gulp.task('watch', ['js'], function () {
   gulp.watch(CONTENT_SCRIPTS, ['js:contentscripts']);
+  gulp.watch(BACKGROUND_SCRIPTS, ['js:background']);
 })
 
 gulp.task('default', ['js'])

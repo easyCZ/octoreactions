@@ -5,16 +5,16 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 
   chrome.tabs.insertCSS(tabId, {
-    file: 'octoreactions.css',
+    file: 'css/octoreactions.css',
     runAt: 'document_start'
   });
 
   chrome.tabs.executeScript(tabId, {
-    file: 'jquery-2.2.1.min.js',
+    file: 'lib/jquery-2.2.1.min.js',
     runAt: 'document_start'
   }, () => {
     chrome.tabs.executeScript(tabId, {
-      file: 'Octoreactions.js',
+      file: 'dist/octoreactions.js',
       runAt: 'document_start'
     })
   })
