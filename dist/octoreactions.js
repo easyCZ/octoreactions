@@ -87,7 +87,18 @@ var IssueDetail = function (_View) {
 
   _createClass(IssueDetail, [{
     key: 'parse',
-    value: function parse(dom) {}
+    value: function parse(dom) {
+      var $html = $(dom),
+          containers = $html.find('.comment-reactions-options');
+
+      var pluses = 0;
+      containers.each(function (index, container) {
+        var tokens = $(container).find(PLUS_SELECTOR).text().trim().split(' ');
+        return pluses += +tokens[tokens.length - 1];
+      });
+
+      return pluses;
+    }
   }, {
     key: 'render',
     value: function render() {
@@ -97,14 +108,7 @@ var IssueDetail = function (_View) {
 
 
       Async.getIssueDOM('easyCZ', 'octoreactions', '1').then(function (dom) {
-        var $html = $(dom),
-            containers = $html.find('.comment-reactions-options');
-
-        var pluses = 0;
-        containers.each(function (index, container) {
-          var tokens = $(container).find(PLUS_SELECTOR).text().trim().split(' ');
-          return pluses += +tokens[tokens.length - 1];
-        });
+        var pluses = _this2.parse(dom);
 
         var $issueHeader = $(ISSUE_HEADER_CONTAINER + ' ' + ISSUE_HEADER_ROW);
         var $octoreactions = $(OCTOREACTIONS_CONTAINER);
