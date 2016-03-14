@@ -4,7 +4,7 @@ const ISSUE_HEADER_ROW = '.flex-table-item-primary'
 
 class View {
 
-  getPlusElement(count) {
+  static getPlusElement(count) {
     return `
       <span class="${OCTOREACTIONS_CLASS}">
         ${GITHUB_PLUS}
@@ -13,11 +13,21 @@ class View {
     `
   }
 
-  shouldRender() { return false; }
-
 }
 
 class IssueDetail extends View {
+
+  static render({plus}) {
+
+    const $issueHeader = $(`${ISSUE_HEADER_CONTAINER} ${ISSUE_HEADER_ROW}`);
+    const $octoreactions = $(OCTOREACTIONS_CONTAINER);
+
+    // TODO: Handle more gracefully if exists
+    $octoreactions.remove();
+
+    $issueHeader.append(View.getPlusElement(plus));
+
+  }
 
   parse(dom) {
     var $html = $(dom),
@@ -38,6 +48,14 @@ class IssueDetail extends View {
     Async.getIssueDOM(STATE.owner, STATE.repo, issueId).then((dom) => {
       const pluses = this.parse(dom);
 
+      const storage = {};
+      const namespace = `${STATE.owner}/${STATE.repo}`
+      storage[namespace] = {};
+      storage[namespace][issueId] = pluses;
+      chrome.storage.local.set(storage, () => {
+        // debugger;
+      })
+
       const $issueHeader = $(`${ISSUE_HEADER_CONTAINER} ${ISSUE_HEADER_ROW}`);
       const $octoreactions = $(OCTOREACTIONS_CONTAINER);
 
@@ -57,6 +75,15 @@ class IssueDetail extends View {
 }
 
 class IssueList extends View {
+
+  static render({plus}, $issue) {
+    const $commentsContainer = $issue.find('.issue-comments');
+    const octoreactions = $commentsContainer.find(OCTOREACTIONS_CONTAINER);
+
+    octoreactions.remove();
+
+    $commentsContainer.append(View.getPlusElement(plus));
+  }
 
   getIssues() {
     return $('.table-list-issues li');

@@ -1,10 +1,46 @@
-"use strict";
+'use strict';
 
-var STATE = {
-  owner: null,
-  repo: null,
-  issue: null
-};
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Parser = function () {
+  function Parser() {
+    _classCallCheck(this, Parser);
+  }
+
+  _createClass(Parser, null, [{
+    key: 'parseIssueDetail',
+    value: function parseIssueDetail($dom) {
+      var containers = $dom.find('.comment-reactions-options');
+
+      var plus = 0;
+      containers.each(function (index, container) {
+        var tokens = $(container).find(PLUS_SELECTOR).text().trim().split(' ');
+        return plus += +tokens[tokens.length - 1];
+      });
+
+      return { plus: plus };
+    }
+  }, {
+    key: 'getIssues',
+    value: function getIssues($dom) {
+      var issues = [];
+      $('.table-list-issues li').each(function (i, issue) {
+        var $issue = $(issue);
+        var tokens = $issue.find('a').last().attr('href').split('/');
+        issues.push({
+          id: +tokens[tokens.length - 1],
+          $issue: $issue
+        });
+      });
+
+      return issues;
+    }
+  }]);
+
+  return Parser;
+}();
 'use strict';
 
 var PLUS_SELECTOR = '.reaction-summary-item[value~="+1"]';
@@ -25,15 +61,11 @@ var GITHUB_PLUS = '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.
 var EVENT = {
   LOCATION_CHANGE: 'octoreactions:location_change'
 };
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var getIssueUrl = function getIssueUrl(owner, repo, issueId) {
-  return 'https://github.com/' + owner + '/' + repo + '/issues/' + (issueId ? issueId : '');
-};
 
 var Async = function () {
   function Async() {
@@ -41,11 +73,9 @@ var Async = function () {
   }
 
   _createClass(Async, null, [{
-    key: 'getIssueDOM',
-    value: function getIssueDOM(owner, repo) {
-      var issueId = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-
-      var url = getIssueUrl(owner, repo, issueId);
+    key: "getIssueDOM",
+    value: function getIssueDOM(owner, repo, issueId) {
+      var url = "https://github.com/" + owner + "/" + repo + "/issues/" + issueId;
       return $.get(url);
     }
   }]);
@@ -70,15 +100,10 @@ var View = function () {
     _classCallCheck(this, View);
   }
 
-  _createClass(View, [{
+  _createClass(View, null, [{
     key: 'getPlusElement',
     value: function getPlusElement(count) {
       return '\n      <span class="' + OCTOREACTIONS_CLASS + '">\n        ' + GITHUB_PLUS + '\n        <span class="' + OCTOREACTIONS_COUNT_CLASS + '">' + count + '</span>\n      </span>\n    ';
-    }
-  }, {
-    key: 'shouldRender',
-    value: function shouldRender() {
-      return false;
     }
   }]);
 
@@ -120,6 +145,14 @@ var IssueDetail = function (_View) {
       Async.getIssueDOM(STATE.owner, STATE.repo, issueId).then(function (dom) {
         var pluses = _this2.parse(dom);
 
+        var storage = {};
+        var namespace = STATE.owner + '/' + STATE.repo;
+        storage[namespace] = {};
+        storage[namespace][issueId] = pluses;
+        chrome.storage.local.set(storage, function () {
+          // debugger;
+        });
+
         var $issueHeader = $(ISSUE_HEADER_CONTAINER + ' ' + ISSUE_HEADER_ROW);
         var $octoreactions = $(OCTOREACTIONS_CONTAINER);
 
@@ -133,6 +166,20 @@ var IssueDetail = function (_View) {
     key: 'shouldRender',
     value: function shouldRender() {
       return window.location.pathname.match(/(\w|\/)*issues\/\d/);
+    }
+  }], [{
+    key: 'render',
+    value: function render(_ref) {
+      var plus = _ref.plus;
+
+
+      var $issueHeader = $(ISSUE_HEADER_CONTAINER + ' ' + ISSUE_HEADER_ROW);
+      var $octoreactions = $(OCTOREACTIONS_CONTAINER);
+
+      // TODO: Handle more gracefully if exists
+      $octoreactions.remove();
+
+      $issueHeader.append(View.getPlusElement(plus));
     }
   }]);
 
@@ -196,35 +243,146 @@ var IssueList = function (_View2) {
     value: function shouldRender() {
       return window.location.pathname.endsWith('issues');
     }
+  }], [{
+    key: 'render',
+    value: function render(_ref2, $issue) {
+      var plus = _ref2.plus;
+
+      var $commentsContainer = $issue.find('.issue-comments');
+      var octoreactions = $commentsContainer.find(OCTOREACTIONS_CONTAINER);
+
+      octoreactions.remove();
+
+      $commentsContainer.append(View.getPlusElement(plus));
+    }
   }]);
 
   return IssueList;
 }(View);
 'use strict';
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var initialState = {
+  owner: null,
+  repository: null,
+  issueId: null
+};
+
 var Octoreactions = function () {
   function Octoreactions() {
+    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+    var chromeStorage = arguments[1];
+
     _classCallCheck(this, Octoreactions);
 
-    console.debug('[Octoreactions] Init');
+    this.state = state;
+    this.storage = chromeStorage.local;
 
-    this.views = [new IssueDetail(), new IssueList()];
-
-    $(document).on(EVENT.LOCATION_CHANGE, this.render.bind(this));
+    this.updateState();
+    this.render();
   }
 
   _createClass(Octoreactions, [{
+    key: 'updateState',
+    value: function updateState() {
+      var pathname = arguments.length <= 0 || arguments[0] === undefined ? window.location.pathname : arguments[0];
+
+      var _pathname$split = pathname.split('/');
+
+      var _pathname$split2 = _slicedToArray(_pathname$split, 5);
+
+      var _ = _pathname$split2[0];
+      var owner = _pathname$split2[1];
+      var repo = _pathname$split2[2];
+      var issues = _pathname$split2[3];
+      var issueId = _pathname$split2[4];
+
+      this.state = Object.assign({}, this.state, { owner: owner, repo: repo, issueId: issueId });
+    }
+  }, {
     key: 'render',
     value: function render() {
-      this.views.filter(function (v) {
-        return v.shouldRender();
-      }).forEach(function (v) {
-        return v.render();
+      var _this = this;
+
+      var state = this.state;
+      var isIssueList = !state.issueId;
+
+      if (isIssueList) {
+        (function () {
+
+          var issues = Parser.getIssues($(document));
+          var _state = _this.state;
+          var owner = _state.owner;
+          var repo = _state.repo;
+
+
+          issues.forEach(function (_ref) {
+            var id = _ref.id;
+            var $issue = _ref.$issue;
+
+            _this.getReactionsFromStore(owner, repo, id).then(function (r) {
+              return r;
+            }, function () {
+              return Async.getIssueDOM(owner, repo, id).then(function (dom) {
+                var reactions = Parser.parseIssueDetail($(dom));
+                _this.setReactionsToStore(owner, repo, id, reactions);
+                return jQuery.Deferred().resolve(reactions);
+              });
+            }).then(function (reactions) {
+              return IssueList.render(reactions, $issue);
+            });
+          });
+        })();
+      } else {
+        (function () {
+          var _state2 = _this.state;
+          var owner = _state2.owner;
+          var repo = _state2.repo;
+          var issueId = _state2.issueId;
+
+          _this.getReactionsFromStore(owner, repo, issueId).then(function (r) {
+            return r;
+          }, function () {
+            var reactions = Parser.parseIssueDetail($(document));
+            _this.setReactionsToStore(owner, repo, issueId, reactions);
+            return jQuery.Deferred().resolve(reactions);
+          }).then(function (reactions) {
+            return IssueDetail.render(reactions);
+          });
+        })();
+      }
+    }
+  }, {
+    key: 'getReactionsFromStore',
+    value: function getReactionsFromStore(owner, repo, issueId) {
+      var namespace = owner + ':' + repo;
+
+      console.log('namespace', namespace);
+      var deferred = jQuery.Deferred();
+      this.storage.get(namespace, function (res) {
+        console.log('Store', res);
+        if (namespace in res && issueId in res[namespace]) {
+          console.log('[Octoreactions] Getting from store: ', res[namespace][issueId]);
+          return deferred.resolve(res[namespace][issueId]);
+        }
+        return deferred.reject();
       });
+
+      return deferred;
+    }
+  }, {
+    key: 'setReactionsToStore',
+    value: function setReactionsToStore(owner, repo, issueId, reactions) {
+      var namespace = owner + ':' + repo;
+      var toStore = {};
+      toStore[namespace] = {};
+      toStore[namespace][issueId] = reactions;
+      this.storage.set(toStore);
     }
   }]);
 
@@ -232,51 +390,24 @@ var Octoreactions = function () {
 }();
 'use strict';
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 jQuery(document).ready(function ($) {
 
   var GH_PJAX_CONTAINER_SEL = '#js-repo-pjax-container, .context-loader-container, [data-pjax-container]';
 
-  var parsePath = function parsePath(pathname) {
-    var tokens = pathname.split('/'),
-        owner = tokens[1],
-        repo = tokens[2];
-    return [owner, repo];
-  };
-
-  var setRepoState = function setRepoState() {
-    var _parsePath = parsePath(window.location.pathname);
-
-    var _parsePath2 = _slicedToArray(_parsePath, 2);
-
-    var owner = _parsePath2[0];
-    var repo = _parsePath2[1];
-
-    STATE.owner = owner;
-    STATE.repo = repo;
-  };
-
-  var _parsePath3 = parsePath(window.location.pathname);
-
-  var _parsePath4 = _slicedToArray(_parsePath3, 2);
-
-  var owner = _parsePath4[0];
-  var repo = _parsePath4[1];
-
-
   if (!window.octoreactions) {
-    window.octoreactions = new Octoreactions();
-    setRepoState();
+    window.octoreactions = new Octoreactions(null, chrome.storage);
+    window.octoreactions.updateState();
     window.octoreactions.render();
   }
 
   // Setup observers
   var pageChangeObserver = new window.MutationObserver(function () {
     console.debug('[Octoreactions] Page Change');
-    setRepoState();
 
-    return $(document).trigger(EVENT.LOCATION_CHANGE);
+    window.octoreactions.updateState();
+    window.octoreactions.render();
+
+    // return $(document).trigger(EVENT.LOCATION_CHANGE);
   });
 
   var pjaxContainer = $(GH_PJAX_CONTAINER_SEL)[0];

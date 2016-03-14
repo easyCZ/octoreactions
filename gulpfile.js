@@ -5,7 +5,7 @@ var concat = require("gulp-concat");
 
 
 var CONTENT_SCRIPTS = [
-  'src/State.js',
+  'src/Parser.js',
   'src/Constants.js',
   'src/Async.js',
   'src/Views.js',
