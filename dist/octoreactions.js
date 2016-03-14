@@ -47,8 +47,6 @@ var Async = function () {
 }();
 'use strict';
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -150,13 +148,8 @@ var IssueList = function (_View2) {
   }, {
     key: 'getIssueId',
     value: function getIssueId($issue) {
-      var _$issue$find$attr$spl = $issue.find('a').attr('href').split('/');
-
-      var _$issue$find$attr$spl2 = _slicedToArray(_$issue$find$attr$spl, 2);
-
-      var id = _$issue$find$attr$spl2[1];
-
-      return +id;
+      var tokens = $issue.find('a').last().attr('href').split('/');
+      return +tokens[tokens.length - 1];
     }
   }, {
     key: 'renderCountToIssue',
@@ -181,6 +174,7 @@ var IssueList = function (_View2) {
         var issueId = _this4.getIssueId($issue);
 
         Async.getIssueDOM('easyCZ', 'octoreactions', issueId).then(function (dom) {
+
           var pluses = issueDetail.parse(dom);
 
           _this4.renderCountToIssue($issue, pluses);

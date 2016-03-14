@@ -62,8 +62,8 @@ class IssueList extends View {
   }
 
   getIssueId($issue) {
-    const [ ,id] = $issue.find('a').attr('href').split('/');
-    return +id;
+    const tokens = $issue.find('a').last().attr('href').split('/');
+    return +tokens[tokens.length - 1];
   }
 
   renderCountToIssue($issue, count) {
@@ -84,6 +84,7 @@ class IssueList extends View {
       const issueId = this.getIssueId($issue);
 
       Async.getIssueDOM('easyCZ', 'octoreactions', issueId).then(dom => {
+
         const pluses = issueDetail.parse(dom);
 
         this.renderCountToIssue($issue, pluses);
