@@ -7,9 +7,8 @@ const initialState = {
 
 class Octoreactions {
 
-  constructor(state=initialState, chromeStorage) {
+  constructor(state=initialState) {
     this.state = state;
-    this.storage = chromeStorage.local;
 
     this.updateState();
     this.render();
@@ -18,6 +17,11 @@ class Octoreactions {
   updateState(pathname=window.location.pathname) {
     let [_, owner, repo, issues, issueId] = pathname.split('/')
     this.state = Object.assign({}, this.state, {owner, repo, issueId})
+  }
+
+  updateAndRender() {
+    this.updateState();
+    this.render();
   }
 
   render() {
