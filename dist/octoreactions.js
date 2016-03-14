@@ -1,3 +1,10 @@
+"use strict";
+
+var STATE = {
+  owner: null,
+  repo: null,
+  issue: null
+};
 'use strict';
 
 var PLUS_SELECTOR = '.reaction-summary-item[value~="+1"]';
@@ -108,8 +115,9 @@ var IssueDetail = function (_View) {
 
       var plusCount = arguments.length <= 0 || arguments[0] === undefined ? 10 : arguments[0];
 
-
-      Async.getIssueDOM('easyCZ', 'octoreactions', '1').then(function (dom) {
+      var tokens = window.location.pathname.split('/');
+      var issueId = tokens[tokens.length - 1];
+      Async.getIssueDOM(STATE.owner, STATE.repo, issueId).then(function (dom) {
         var pluses = _this2.parse(dom);
 
         var $issueHeader = $(ISSUE_HEADER_CONTAINER + ' ' + ISSUE_HEADER_ROW);
@@ -173,11 +181,11 @@ var IssueList = function (_View2) {
         var $issue = $(issue);
         var issueId = _this4.getIssueId($issue);
 
-        Async.getIssueDOM('easyCZ', 'octoreactions', issueId).then(function (dom) {
+        Async.getIssueDOM(STATE.owner, STATE.repo, issueId).then(function (dom) {
 
           var pluses = issueDetail.parse(dom);
 
-          _this4.renderCountToIssue($issue, pluses);
+          if (pluses > 0) _this4.renderCountToIssue($issue, pluses);
         });
       });
 
@@ -186,7 +194,7 @@ var IssueList = function (_View2) {
   }, {
     key: 'shouldRender',
     value: function shouldRender() {
-      return window.location.pathname.match(/^(\w|\/)*issues$/);
+      return window.location.pathname.endsWith('issues');
     }
   }]);
 
@@ -224,23 +232,50 @@ var Octoreactions = function () {
 }();
 'use strict';
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 jQuery(document).ready(function ($) {
 
   var GH_PJAX_CONTAINER_SEL = '#js-repo-pjax-container, .context-loader-container, [data-pjax-container]';
 
-  var pathname = window.location.pathname;
-  var tokens = pathname.split('/'),
-      owner = tokens[1],
-      repo = tokens[2];
+  var parsePath = function parsePath(pathname) {
+    var tokens = pathname.split('/'),
+        owner = tokens[1],
+        repo = tokens[2];
+    return [owner, repo];
+  };
+
+  var setRepoState = function setRepoState() {
+    var _parsePath = parsePath(window.location.pathname);
+
+    var _parsePath2 = _slicedToArray(_parsePath, 2);
+
+    var owner = _parsePath2[0];
+    var repo = _parsePath2[1];
+
+    STATE.owner = owner;
+    STATE.repo = repo;
+  };
+
+  var _parsePath3 = parsePath(window.location.pathname);
+
+  var _parsePath4 = _slicedToArray(_parsePath3, 2);
+
+  var owner = _parsePath4[0];
+  var repo = _parsePath4[1];
+
 
   if (!window.octoreactions) {
-    window.octoreactions = new Octoreactions(owner, repo);
+    window.octoreactions = new Octoreactions();
+    setRepoState();
     window.octoreactions.render();
   }
 
   // Setup observers
   var pageChangeObserver = new window.MutationObserver(function () {
     console.debug('[Octoreactions] Page Change');
+    setRepoState();
+
     return $(document).trigger(EVENT.LOCATION_CHANGE);
   });
 

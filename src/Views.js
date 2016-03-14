@@ -33,8 +33,9 @@ class IssueDetail extends View {
   }
 
   render(plusCount=10) {
-
-    Async.getIssueDOM('easyCZ', 'octoreactions', '1').then((dom) => {
+    const tokens = window.location.pathname.split('/');
+    const issueId = tokens[tokens.length - 1]
+    Async.getIssueDOM(STATE.owner, STATE.repo, issueId).then((dom) => {
       const pluses = this.parse(dom);
 
       const $issueHeader = $(`${ISSUE_HEADER_CONTAINER} ${ISSUE_HEADER_ROW}`);
@@ -83,11 +84,12 @@ class IssueList extends View {
       const $issue = $(issue);
       const issueId = this.getIssueId($issue);
 
-      Async.getIssueDOM('easyCZ', 'octoreactions', issueId).then(dom => {
+      Async.getIssueDOM(STATE.owner, STATE.repo, issueId).then(dom => {
 
         const pluses = issueDetail.parse(dom);
 
-        this.renderCountToIssue($issue, pluses);
+        if (pluses > 0)
+          this.renderCountToIssue($issue, pluses);
       })
     })
 
@@ -95,7 +97,7 @@ class IssueList extends View {
   }
 
   shouldRender() {
-    return window.location.pathname.match(/^(\w|\/)*issues$/);
+    return window.location.pathname.endsWith('issues');
   }
 
 

@@ -14,3 +14,7 @@
     font-size: 13px;
     vertical-align: middle;
 }
+
+.flex-table-item .Octoreactions {
+    display: inline-block;
+}
