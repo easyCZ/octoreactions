@@ -9,6 +9,8 @@ var HEART_SELECTOR = '.reaction-summary-item[value~="heart"]';
 
 var REACTION_OPTION_SELECTORS = [PLUS_SELECTOR, MINUS_SELECTOR, SMILE_SELECTOR, THINKING_SELECTOR, TADA_SELECTOR, HEART_SELECTOR];
 
+var OCTOREACTIONS_CLASS = 'Octoreactions';
+var OCTOREACTIONS_COUNT_CLASS = 'Octoreactions-Count';
 var OCTOREACTIONS_CONTAINER = '.Octoreactions';
 
 var GITHUB_PLUS = '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png">👍</g-emoji>';
@@ -45,6 +47,8 @@ var Async = function () {
 }();
 'use strict';
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -64,7 +68,7 @@ var View = function () {
   _createClass(View, [{
     key: 'getPlusElement',
     value: function getPlusElement(count) {
-      return '\n      <span class="' + OCTOREACTIONS_CONTAINER + '">\n        ' + GITHUB_PLUS + '\n        ' + count + '\n      </span>\n    ';
+      return '\n      <span class="' + OCTOREACTIONS_CLASS + '">\n        ' + GITHUB_PLUS + '\n        <span class="' + OCTOREACTIONS_COUNT_CLASS + '">' + count + '</span>\n      </span>\n    ';
     }
   }, {
     key: 'shouldRender',
@@ -138,6 +142,60 @@ var IssueList = function (_View2) {
     return _possibleConstructorReturn(this, Object.getPrototypeOf(IssueList).apply(this, arguments));
   }
 
+  _createClass(IssueList, [{
+    key: 'getIssues',
+    value: function getIssues() {
+      return $('.table-list-issues li');
+    }
+  }, {
+    key: 'getIssueId',
+    value: function getIssueId($issue) {
+      var _$issue$find$attr$spl = $issue.find('a').attr('href').split('/');
+
+      var _$issue$find$attr$spl2 = _slicedToArray(_$issue$find$attr$spl, 2);
+
+      var id = _$issue$find$attr$spl2[1];
+
+      return +id;
+    }
+  }, {
+    key: 'renderCountToIssue',
+    value: function renderCountToIssue($issue, count) {
+      var $commentsContainer = $issue.find('.issue-comments');
+      var octoreactions = $commentsContainer.find(OCTOREACTIONS_CONTAINER);
+
+      octoreactions.remove();
+
+      $commentsContainer.append(this.getPlusElement(count));
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this4 = this;
+
+      var issueDetail = new IssueDetail();
+      var $issues = this.getIssues();
+
+      $issues.each(function (i, issue) {
+        var $issue = $(issue);
+        var issueId = _this4.getIssueId($issue);
+
+        Async.getIssueDOM('easyCZ', 'octoreactions', issueId).then(function (dom) {
+          var pluses = issueDetail.parse(dom);
+
+          _this4.renderCountToIssue($issue, pluses);
+        });
+      });
+
+      console.log('rendering');
+    }
+  }, {
+    key: 'shouldRender',
+    value: function shouldRender() {
+      return window.location.pathname.match(/^(\w|\/)*issues$/);
+    }
+  }]);
+
   return IssueList;
 }(View);
 'use strict';
@@ -170,127 +228,6 @@ var Octoreactions = function () {
 
   return Octoreactions;
 }();
-
-// function Octoreactions(owner, repo) {
-
-//   this.owner = owner;
-//   this.repo = repo;
-
-// this.renderIssue('easyCZ', 'octoreactions', 1)
-// this.getReactions('https://github.com/easyCZ/octoreactions/issues/1', function (count) {
-//   console.log('pluses', count);
-// });
-
-// var that = this;
-// $('.table-list-issues li').each(function (i, issue) {
-//   debugger;
-//   var links = $(issue).find('.issue-title-link');
-//   var $header = $(issue).find('.issue-comments');
-
-//   if (links.length === 0) return;
-
-//   that.get(links.attr('href'), function (success, data) {
-//     var reactions = $(data).find('.reaction-summary-item[value~="+1"]');
-
-//     $header.append([
-//       '<div class="Octoreactions-Count">',
-//         '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png">👍</g-emoji>',
-//         '<span>',
-//           reactions.length.toString(),
-//         '</span>',
-//       '</div>'
-//     ].join(''))
-//     // <g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png">👍</g-emoji>
-
-//     console.log('Reactions:', reactions.length);
-//   })
-// })
-// }
-
-// Octoreactions.prototype.getPlus = function () {
-//   return '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png">👍</g-emoji>';
-// }
-
-// Octoreactions.prototype.getIssueUrl = function getIssueUrl(owner, repo, issueId) {
-//   return [
-//     'https://github.com/', owner, '/', repo, '/issues/', issueId ? issueId : ''
-//   ].join('');
-// }
-
-// Octoreactions.prototype.renderIssue = function (issueId) {
-//   console.log('RenderIssue:', issueId);
-//   var url = this.getIssueUrl(this.owner, this.repo, issueId);
-//   var that = this;
-
-//   this.getReactions(url, function onGetReactions(count) {
-//     var $issueHeader = $('.flex-table-item-primary'),
-//         $octoreactions = $('.Octoreactions-Count');
-
-//     $octoreactions.remove();
-
-//     $issueHeader.append([
-//       '<span class="Octoreactions-Count">',
-//         that.getPlus(),
-//         count.toString(),
-//       '</span>'
-//     ].join(''))
-//   })
-// }
-
-// Octoreactions.prototype.renderIssueList = function (owner, repo, issues) {
-//   issues.forEach(function (issue) {
-//     var url = this.getIssueUrl(owner, repo, issue);
-
-//     this.getReactions(url, function (count) {
-//           $header.append([
-//         '<div class="Octoreactions-Count">',
-//           '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png">👍</g-emoji>',
-//           '<span>',
-//             reactions.length.toString(),
-//           '</span>',
-//         '</div>'
-//       ].join(''))
-
-//     })
-//   }.bind(this))
-// }
-
-// Octoreactions.prototype.getReactions = function getReactions(url, cb) {
-//   return $.get(url, function onSuccess(data, status, jqxhr) {
-//     var $html = $(data),
-//         containers = $html.find('.comment-reactions-options');
-
-//     var pluses = 0;
-//     containers.each(function (index, container) {
-//       var tokens = $(container).find(PLUS_SELECTOR).text().trim().split(' ');
-//       return pluses += +tokens[tokens.length - 1]
-//     })
-
-//     return cb && cb(pluses);
-//   })
-// }
-
-// jQuery(document).ready(function ($) {
-//   var pathname = window.location.pathname;
-//   var tokens = pathname.split('/'),
-//       owner = tokens[1],
-//       repo = tokens[2];
-
-//   if (!window.octoreactions)
-//     window.octoreactions = new Octoreactions(owner, repo)
-
-//   // Issue detail
-//   if (pathname.match(/(\w|\/)*issues\/\d/)) {
-//     var issueId = +tokens[tokens.length - 1];
-//     octoreactions.renderIssue(issueId)
-//   }
-
-//   // Issue List
-//   else if (pathname.match(/(\w|\/)*issues\//)) {
-
-//   }
-
-// })
 'use strict';
 
 jQuery(document).ready(function ($) {

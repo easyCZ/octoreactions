@@ -1,13 +1,16 @@
-.Octoreactions-Count {
+.Octoreactions {
     text-align: right;
+    display: block;
     padding-left: 1.2em;
 }
 
-.Octoreactions-Count g-emoji {
+.Octoreactions g-emoji {
     font-size: 18px !important;
+    margin-right: -2px !important;
 }
 
-.Octoreactions-Count span {
+.Octoreactions span {
     color: #767676;
-    font-size: 12px;
+    font-size: 13px;
+    vertical-align: middle;
 }

@@ -6,9 +6,9 @@ class View {
 
   getPlusElement(count) {
     return `
-      <span class="${OCTOREACTIONS_CONTAINER}">
+      <span class="${OCTOREACTIONS_CLASS}">
         ${GITHUB_PLUS}
-        ${count}
+        <span class="${OCTOREACTIONS_COUNT_CLASS}">${count}</span>
       </span>
     `
   }
@@ -55,4 +55,47 @@ class IssueDetail extends View {
 
 }
 
-class IssueList extends View {}
+class IssueList extends View {
+
+  getIssues() {
+    return $('.table-list-issues li');
+  }
+
+  getIssueId($issue) {
+    const [ ,id] = $issue.find('a').attr('href').split('/');
+    return +id;
+  }
+
+  renderCountToIssue($issue, count) {
+    const $commentsContainer = $issue.find('.issue-comments');
+    const octoreactions = $commentsContainer.find(OCTOREACTIONS_CONTAINER);
+
+    octoreactions.remove();
+
+    $commentsContainer.append(this.getPlusElement(count));
+  }
+
+  render() {
+    const issueDetail = new IssueDetail();
+    const $issues = this.getIssues();
+
+    $issues.each((i, issue) => {
+      const $issue = $(issue);
+      const issueId = this.getIssueId($issue);
+
+      Async.getIssueDOM('easyCZ', 'octoreactions', issueId).then(dom => {
+        const pluses = issueDetail.parse(dom);
+
+        this.renderCountToIssue($issue, pluses);
+      })
+    })
+
+    console.log('rendering');
+  }
+
+  shouldRender() {
+    return window.location.pathname.match(/^(\w|\/)*issues$/);
+  }
+
+
+}

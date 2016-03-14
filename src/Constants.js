@@ -15,6 +15,8 @@ const REACTION_OPTION_SELECTORS = [
   HEART_SELECTOR
 ]
 
+const OCTOREACTIONS_CLASS = 'Octoreactions';
+const OCTOREACTIONS_COUNT_CLASS = 'Octoreactions-Count';
 const OCTOREACTIONS_CONTAINER = '.Octoreactions';
 
 const GITHUB_PLUS = '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png">👍</g-emoji>'

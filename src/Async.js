@@ -5,9 +5,8 @@ const getIssueUrl = (owner, repo, issueId) => `https://github.com/${owner}/${rep
 class Async {
 
   static getIssueDOM(owner, repo, issueId=null) {
-    const url = getIssueUrl(owner, repo, issueId)
+    const url = getIssueUrl(owner, repo, issueId);
     return $.get(url)
   }
-
 
 }
