@@ -4,6 +4,58 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var STORAGE_NAMESPACE = 'octoreactions';
+
+var Storage = function () {
+  function Storage() {
+    _classCallCheck(this, Storage);
+  }
+
+  _createClass(Storage, [{
+    key: 'getKey',
+    value: function getKey(owner, repo) {
+      return STORAGE_NAMESPACE + ':' + owner + ':' + repo;
+    }
+  }, {
+    key: 'get',
+    value: function get(key) {
+      return JSON.parse(localStorage.getItem(key));
+    }
+  }, {
+    key: 'set',
+    value: function set(key, value) {
+      var encoded = JSON.stringify(value);
+      return localStorage.setItem(key, encoded);
+    }
+  }, {
+    key: 'setIssue',
+    value: function setIssue(owner, repo, issueId, value) {
+      var key = this.getKey(owner, repo);
+      var current = this.get(key);
+
+      if (!current) current = {};
+
+      current[issueId] = value;
+      this.set(key, current);
+    }
+  }, {
+    key: 'getIssue',
+    value: function getIssue(owner, repo, issueId) {
+      var key = this.getKey(owner, repo);
+      var value = this.get(key);
+
+      if (value && issueId in value) return value[issueId];
+    }
+  }]);
+
+  return Storage;
+}();
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var Parser = function () {
   function Parser() {
     _classCallCheck(this, Parser);
@@ -186,6 +238,8 @@ var Octoreactions = function () {
 
     this.state = state;
 
+    this.storage = new Storage();
+
     this.updateState();
     this.render();
   }
@@ -258,7 +312,7 @@ var Octoreactions = function () {
             return r;
           }, function () {
             var reactions = Parser.parseIssueDetail($(document));
-            _this.setReactionsToStore(owner, repo, issueId, reactions);
+            _this.storage.setIssue(owner, repo, issueId, reactions);
             return jQuery.Deferred().resolve(reactions);
           }).then(function (reactions) {
             return IssueDetail.render(reactions);
@@ -269,37 +323,8 @@ var Octoreactions = function () {
   }, {
     key: 'getReactionsFromStore',
     value: function getReactionsFromStore(owner, repo, issueId) {
-      var namespace = STORAGE + ':' + owner + ':' + repo;
-
-      var deferred = jQuery.Deferred();
-
-      debugger;
-      try {
-        var item = JSON.parse(localStorage.getItem(namespace));
-        if (issueId in item[namespace]) return deferred.resolve(item[namespace][issueId]);
-        return deferred.reject();
-      } catch (e) {
-        return deferred.reject();
-      }
-
-      return deferred;
-    }
-  }, {
-    key: 'setReactionsToStore',
-    value: function setReactionsToStore(owner, repo, issueId, reactions) {
-      var namespace = STORAGE + ':' + owner + ':' + repo;
-
-      Storage.setIssue(namespace, issueId, reactions);
-
-      try {
-        var stored = JSON.parse(localStorage.getItem(namespace));
-        if (!stored) {
-          stored = {};
-          stored[namespace] = {};
-        }
-        stored[namespace][issueId] = reactions;
-        localStorage.setItem(namespace, JSON.stringify(stored));
-      } catch (e) {}
+      var reactions = this.storage.getIssue(owner, repo, issueId);
+      return reactions ? jQuery.Deferred().resolve(reactions) : jQuery.Deferred().reject();
     }
   }]);
 

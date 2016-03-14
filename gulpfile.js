@@ -2,9 +2,11 @@ var gulp = require("gulp");
 var sourcemaps = require("gulp-sourcemaps");
 var babel = require("gulp-babel");
 var concat = require("gulp-concat");
+var preprocess = require('gulp-preprocess');
 
 
 var CONTENT_SCRIPTS = [
+  'src/Storage.js',
   'src/Parser.js',
   'src/Constants.js',
   'src/Async.js',
@@ -17,6 +19,7 @@ var BACKGROUND_SCRIPTS = ['src/background.js'];
 
 gulp.task('js:contentscripts', function () {
   return gulp.src(CONTENT_SCRIPTS)
+    .pipe(preprocess({context: { DEBUG: false}}))
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(concat("octoreactions.js"))

@@ -24,6 +24,7 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.0",
+    "gulp-preprocess": "^2.0.0",
     "gulp-sourcemaps": "^1.6.0",
     "jsdom": "^8.1.0",
     "mocha": "^2.4.5",
