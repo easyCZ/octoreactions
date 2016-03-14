@@ -15,6 +15,7 @@ const REACTION_OPTION_SELECTORS = [
   HEART_SELECTOR
 ]
 
+const STORAGE = 'octoreactions';
 const OCTOREACTIONS_CLASS = 'Octoreactions';
 const OCTOREACTIONS_COUNT_CLASS = 'Octoreactions-Count';
 const OCTOREACTIONS_CONTAINER = '.Octoreactions';

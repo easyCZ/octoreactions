@@ -56,28 +56,38 @@ class Octoreactions {
   }
 
   getReactionsFromStore(owner, repo, issueId) {
-    const namespace = `${owner}:${repo}`;
+    const namespace = `${STORAGE}:${owner}:${repo}`;
 
-    console.log('namespace', namespace);
     const deferred = jQuery.Deferred();
-    this.storage.get(namespace, (res) => {
-      console.log('Store', res);
-      if (namespace in res && issueId in res[namespace]) {
-        console.log('[Octoreactions] Getting from store: ', res[namespace][issueId])
-        return deferred.resolve(res[namespace][issueId])
-      }
-      return deferred.reject();
-    })
+
+    debugger;
+    try {
+      const item = JSON.parse(localStorage.getItem(namespace))
+      if (issueId in item[namespace]) return deferred.resolve(item[namespace][issueId])
+      return deferred.reject()
+    }
+    catch (e) {
+      return deferred.reject()
+    }
 
     return deferred;
   }
 
   setReactionsToStore(owner, repo, issueId, reactions) {
-    const namespace = `${owner}:${repo}`;
-    let toStore = {};
-    toStore[namespace] = {};
-    toStore[namespace][issueId] = reactions;
-    this.storage.set(toStore)
+    const namespace = `${STORAGE}:${owner}:${repo}`;
+
+    try {
+      let stored = JSON.parse(localStorage.getItem(namespace));
+      if (!stored) {
+        stored = {};
+        stored[namespace] = {};
+      }
+      stored[namespace][issueId] = reactions;
+      localStorage.setItem(namespace, JSON.stringify(stored));
+    }
+    catch (e) {
+
+    }
   }
 
 }

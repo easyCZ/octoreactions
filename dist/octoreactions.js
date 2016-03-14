@@ -52,6 +52,7 @@ var HEART_SELECTOR = '.reaction-summary-item[value~="heart"]';
 
 var REACTION_OPTION_SELECTORS = [PLUS_SELECTOR, MINUS_SELECTOR, SMILE_SELECTOR, THINKING_SELECTOR, TADA_SELECTOR, HEART_SELECTOR];
 
+var STORAGE = 'octoreactions';
 var OCTOREACTIONS_CLASS = 'Octoreactions';
 var OCTOREACTIONS_COUNT_CLASS = 'Octoreactions-Count';
 var OCTOREACTIONS_CONTAINER = '.Octoreactions';
@@ -360,29 +361,35 @@ var Octoreactions = function () {
   }, {
     key: 'getReactionsFromStore',
     value: function getReactionsFromStore(owner, repo, issueId) {
-      var namespace = owner + ':' + repo;
+      var namespace = STORAGE + ':' + owner + ':' + repo;
 
-      console.log('namespace', namespace);
       var deferred = jQuery.Deferred();
-      this.storage.get(namespace, function (res) {
-        console.log('Store', res);
-        if (namespace in res && issueId in res[namespace]) {
-          console.log('[Octoreactions] Getting from store: ', res[namespace][issueId]);
-          return deferred.resolve(res[namespace][issueId]);
-        }
+
+      debugger;
+      try {
+        var item = JSON.parse(localStorage.getItem(namespace));
+        if (issueId in item[namespace]) return deferred.resolve(item[namespace][issueId]);
         return deferred.reject();
-      });
+      } catch (e) {
+        return deferred.reject();
+      }
 
       return deferred;
     }
   }, {
     key: 'setReactionsToStore',
     value: function setReactionsToStore(owner, repo, issueId, reactions) {
-      var namespace = owner + ':' + repo;
-      var toStore = {};
-      toStore[namespace] = {};
-      toStore[namespace][issueId] = reactions;
-      this.storage.set(toStore);
+      var namespace = STORAGE + ':' + owner + ':' + repo;
+
+      try {
+        var stored = JSON.parse(localStorage.getItem(namespace));
+        if (!stored) {
+          stored = {};
+          stored[namespace] = {};
+        }
+        stored[namespace][issueId] = reactions;
+        localStorage.setItem(namespace, JSON.stringify(stored));
+      } catch (e) {}
     }
   }]);
 
