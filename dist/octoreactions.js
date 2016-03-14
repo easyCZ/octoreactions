@@ -289,6 +289,8 @@ var Octoreactions = function () {
     value: function setReactionsToStore(owner, repo, issueId, reactions) {
       var namespace = STORAGE + ':' + owner + ':' + repo;
 
+      Storage.setIssue(namespace, issueId, reactions);
+
       try {
         var stored = JSON.parse(localStorage.getItem(namespace));
         if (!stored) {

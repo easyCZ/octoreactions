@@ -80,6 +80,8 @@ class Octoreactions {
   setReactionsToStore(owner, repo, issueId, reactions) {
     const namespace = `${STORAGE}:${owner}:${repo}`;
 
+    Storage.setIssue(namespace, issueId, reactions)
+
     try {
       let stored = JSON.parse(localStorage.getItem(namespace));
       if (!stored) {
