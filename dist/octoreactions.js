@@ -120,55 +120,7 @@ var IssueDetail = function (_View) {
     return _possibleConstructorReturn(this, Object.getPrototypeOf(IssueDetail).apply(this, arguments));
   }
 
-  _createClass(IssueDetail, [{
-    key: 'parse',
-    value: function parse(dom) {
-      var $html = $(dom),
-          containers = $html.find('.comment-reactions-options');
-
-      var pluses = 0;
-      containers.each(function (index, container) {
-        var tokens = $(container).find(PLUS_SELECTOR).text().trim().split(' ');
-        return pluses += +tokens[tokens.length - 1];
-      });
-
-      return pluses;
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      var plusCount = arguments.length <= 0 || arguments[0] === undefined ? 10 : arguments[0];
-
-      var tokens = window.location.pathname.split('/');
-      var issueId = tokens[tokens.length - 1];
-      Async.getIssueDOM(STATE.owner, STATE.repo, issueId).then(function (dom) {
-        var pluses = _this2.parse(dom);
-
-        var storage = {};
-        var namespace = STATE.owner + '/' + STATE.repo;
-        storage[namespace] = {};
-        storage[namespace][issueId] = pluses;
-        chrome.storage.local.set(storage, function () {
-          // debugger;
-        });
-
-        var $issueHeader = $(ISSUE_HEADER_CONTAINER + ' ' + ISSUE_HEADER_ROW);
-        var $octoreactions = $(OCTOREACTIONS_CONTAINER);
-
-        // TODO: Handle more gracefully if exists
-        $octoreactions.remove();
-
-        $issueHeader.append(_this2.getPlusElement(pluses));
-      });
-    }
-  }, {
-    key: 'shouldRender',
-    value: function shouldRender() {
-      return window.location.pathname.match(/(\w|\/)*issues\/\d/);
-    }
-  }], [{
+  _createClass(IssueDetail, null, [{
     key: 'render',
     value: function render(_ref) {
       var plus = _ref.plus;
@@ -196,55 +148,7 @@ var IssueList = function (_View2) {
     return _possibleConstructorReturn(this, Object.getPrototypeOf(IssueList).apply(this, arguments));
   }
 
-  _createClass(IssueList, [{
-    key: 'getIssues',
-    value: function getIssues() {
-      return $('.table-list-issues li');
-    }
-  }, {
-    key: 'getIssueId',
-    value: function getIssueId($issue) {
-      var tokens = $issue.find('a').last().attr('href').split('/');
-      return +tokens[tokens.length - 1];
-    }
-  }, {
-    key: 'renderCountToIssue',
-    value: function renderCountToIssue($issue, count) {
-      var $commentsContainer = $issue.find('.issue-comments');
-      var octoreactions = $commentsContainer.find(OCTOREACTIONS_CONTAINER);
-
-      octoreactions.remove();
-
-      $commentsContainer.append(this.getPlusElement(count));
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this4 = this;
-
-      var issueDetail = new IssueDetail();
-      var $issues = this.getIssues();
-
-      $issues.each(function (i, issue) {
-        var $issue = $(issue);
-        var issueId = _this4.getIssueId($issue);
-
-        Async.getIssueDOM(STATE.owner, STATE.repo, issueId).then(function (dom) {
-
-          var pluses = issueDetail.parse(dom);
-
-          if (pluses > 0) _this4.renderCountToIssue($issue, pluses);
-        });
-      });
-
-      console.log('rendering');
-    }
-  }, {
-    key: 'shouldRender',
-    value: function shouldRender() {
-      return window.location.pathname.endsWith('issues');
-    }
-  }], [{
+  _createClass(IssueList, null, [{
     key: 'render',
     value: function render(_ref2, $issue) {
       var plus = _ref2.plus;
@@ -277,12 +181,10 @@ var initialState = {
 var Octoreactions = function () {
   function Octoreactions() {
     var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-    var chromeStorage = arguments[1];
 
     _classCallCheck(this, Octoreactions);
 
     this.state = state;
-    this.storage = chromeStorage.local;
 
     this.updateState();
     this.render();
@@ -304,6 +206,12 @@ var Octoreactions = function () {
       var issueId = _pathname$split2[4];
 
       this.state = Object.assign({}, this.state, { owner: owner, repo: repo, issueId: issueId });
+    }
+  }, {
+    key: 'updateAndRender',
+    value: function updateAndRender() {
+      this.updateState();
+      this.render();
     }
   }, {
     key: 'render',
@@ -402,19 +310,13 @@ jQuery(document).ready(function ($) {
   var GH_PJAX_CONTAINER_SEL = '#js-repo-pjax-container, .context-loader-container, [data-pjax-container]';
 
   if (!window.octoreactions) {
-    window.octoreactions = new Octoreactions(null, chrome.storage);
-    window.octoreactions.updateState();
-    window.octoreactions.render();
+    window.octoreactions = new Octoreactions();
+    window.octoreactions.updateAndRender();
   }
 
   // Setup observers
   var pageChangeObserver = new window.MutationObserver(function () {
-    console.debug('[Octoreactions] Page Change');
-
-    window.octoreactions.updateState();
-    window.octoreactions.render();
-
-    // return $(document).trigger(EVENT.LOCATION_CHANGE);
+    window.octoreactions.updateAndRender();
   });
 
   var pjaxContainer = $(GH_PJAX_CONTAINER_SEL)[0];
