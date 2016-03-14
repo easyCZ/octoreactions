@@ -7,9 +7,9 @@ Displays the counts of reactions next to the header of a Issue Detail View and t
 
 # What does it look like?
 
-Detail View
+## Detail View
 ![Issue Detail View](./screenshots/detail.png)
 ---
 
-List View
+## List View
 ![Issue Detail View](./screenshots/list.png)
