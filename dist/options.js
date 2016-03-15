@@ -36,12 +36,12 @@ $reset.addEventListener('click', function () {
 
 $save.addEventListener('click', function () {
   var reactions = {
-    plus: document.getElementById('plus').value || REACTIONS_DEFAULT.plus,
-    minus: document.getElementById('minus').value || REACTIONS_DEFAULT.minus,
-    heart: document.getElementById('heart').value || REACTIONS_DEFAULT.heart,
-    smile: document.getElementById('smile').value || REACTIONS_DEFAULT.smile,
-    tada: document.getElementById('tada').value || REACTIONS_DEFAULT.tada,
-    thinking: document.getElementById('thinking').value || REACTIONS_DEFAULT.thinking
+    plus: document.getElementById('plus').checked || REACTIONS_DEFAULT.plus,
+    minus: document.getElementById('minus').checked || REACTIONS_DEFAULT.minus,
+    heart: document.getElementById('heart').checked || REACTIONS_DEFAULT.heart,
+    smile: document.getElementById('smile').checked || REACTIONS_DEFAULT.smile,
+    tada: document.getElementById('tada').checked || REACTIONS_DEFAULT.tada,
+    thinking: document.getElementById('thinking').checked || REACTIONS_DEFAULT.thinking
   };
   var cache = document.getElementById('cache').value || CACHE_DEFAULT;
 
