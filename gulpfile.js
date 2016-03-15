@@ -39,7 +39,7 @@ gulp.task('js:background', function () {
 })
 
 gulp.task('js:options', function () {
-  return gulp.src(BACKGROUND_SCRIPTS)
+  return gulp.src(OPTIONS_SCRIPTS)
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(concat("options.js"))
