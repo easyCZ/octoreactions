@@ -274,6 +274,7 @@ var Octoreactions = function () {
 
       var state = this.state;
       var isIssueList = !state.issueId;
+      var self = this;
 
       if (isIssueList) {
         (function () {
@@ -293,7 +294,7 @@ var Octoreactions = function () {
             }, function () {
               return Async.getIssueDOM(owner, repo, id).then(function (dom) {
                 var reactions = Parser.parseIssueDetail($(dom));
-                _this.setReactionsToStore(owner, repo, id, reactions);
+                self.storage.setIssue(owner, repo, id, reactions);
                 return jQuery.Deferred().resolve(reactions);
               });
             }).then(function (reactions) {
@@ -350,6 +351,11 @@ jQuery(document).ready(function ($) {
 
   if (pjaxContainer) pageChangeObserver.observe(pjaxContainer, {
     childList: true
+  });
+
+  chrome.runtime.onMessage.addListener(function (request, sender, callback) {
+    console.log(request, sender, callback);
+    debugger;
   });
 });
 //# sourceMappingURL=octoreactions.js.map

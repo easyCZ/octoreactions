@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Octoreactions Options</title>
+  <style>
+    body { padding: 10px; }
+
+    .flex {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin: 5px 0;
+    }
+
+    .flex-reverse {
+      flex-direction: row-reverse;
+    }
+
+    .flex-end {
+      justify-content: flex-end;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      /*width: 70%;*/
+      list-style: none;
+      margin-bottom: 10px;
+    }
+
+    ul li {
+      padding-left: 5px;
+      flex: 1 1 33.33%;
+    }
+    img {
+      max-height: 15px;
+      vertical-align: text-top;
+    }
+
+    #actions {
+      margin-top: 1em;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="flex">
+  <div class="left">
+    Cache Expiration:
+  </div>
+  <div class="right">
+    <input type="number" id="cache" placeholder="Minutes">
+  </div>
+
+</div>
+
+<div class="flex">
+  <div class="left">
+    Reactions to show:
+  </div>
+  <div class="right">
+    <ul class="flex">
+      <li>
+        <label for="plus" class="pure-checkbox">
+          <input id="plus" type="checkbox" value="plus" /> <img src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png" />
+        </label>
+      </li>
+      <li>
+        <label for="minus" class="pure-checkbox">
+          <input id="minus" type="checkbox" value="minus" /> <img src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44e.png" />
+        </label>
+      </li>
+      <li>
+        <label for="heart" class="pure-checkbox">
+          <input id="heart" type="checkbox" value="heart" /> <img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2764.png" />
+        </label>
+      </li>
+      <li>
+        <label for="smile" class="pure-checkbox">
+          <input type="checkbox" value="smile" /> <img src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" />
+        </label>
+      </li>
+      <li>
+        <label for="tada" class="pure-checkbox">
+          <input id="tada" type="checkbox" value="tada" /> <img src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f389.png" />
+        </label>
+      </li>
+      <li>
+        <label for="thinking" class="pure-checkbox">
+          <input id="thinking" type="checkbox" value="thinking" /> <img src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f615.png" />
+        </label>
+      </li>
+  </div>
+</div>
+
+<div id="actions" class="flex flex-end">
+  <button id="reset">Reset</button>
+  <button id="save">Save</button>
+</div>
+
+  <div id="status"></div>
+
+
+  <script src="options.js"></script>
+</body>
+</html>
