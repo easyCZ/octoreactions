@@ -13,5 +13,5 @@ Displays the counts of reactions next to the header of a Issue Detail View and t
 ### List View
 ![Issue Detail View](./screenshots/list.png)
 
-## Options View
+### Options View
 ![Options View](./screenshots/options.png)
