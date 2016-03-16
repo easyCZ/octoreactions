@@ -114,7 +114,7 @@ var GITHUB_PLUS = '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.
 var EVENT = {
   LOCATION_CHANGE: 'octoreactions:location_change'
 };
-"use strict";
+'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -126,9 +126,10 @@ var Async = function () {
   }
 
   _createClass(Async, null, [{
-    key: "getIssueDOM",
+    key: 'getIssueDOM',
     value: function getIssueDOM(owner, repo, issueId) {
-      var url = "https://github.com/" + owner + "/" + repo + "/issues/" + issueId;
+      var url = 'https://github.com/' + owner + '/' + repo + '/issues/' + issueId;
+      console.debug('[Octoreactions] Requesting url: ' + url);
       return $.get(url);
     }
   }]);

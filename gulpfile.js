@@ -61,7 +61,7 @@ gulp.task('js', ['js:content', 'js:background', 'js:options']);
 gulp.task('html', ['html:options'])
 
 gulp.task('watch', ['js', 'html', 'css'], function () {
-  gulp.watch(CONTENT_SCRIPTS, ['js:contentscripts']);
+  gulp.watch(CONTENT_SCRIPTS, ['js:content']);
   gulp.watch(BACKGROUND_SCRIPTS, ['js:background']);
   gulp.watch(OPTIONS_SCRIPTS, ['js:options']);
   gulp.watch(CSS, ['css']);
