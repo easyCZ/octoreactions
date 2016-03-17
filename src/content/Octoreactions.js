@@ -1,7 +1,23 @@
+const REACTIONS_DEFAULT = {
+  plus: true,
+  minus: false,
+  heart: false,
+  smile: false,
+  tada: false,
+  thinking: false
+}
+
+const CACHE_DEFAULT = 10
+const DEFAULT_SETTINGS = {
+  reactions: REACTIONS_DEFAULT,
+  cache: CACHE_DEFAULT
+}
+
 const initialState = {
   owner: null,
-  repository: null,
-  issueId: null
+  repo: null,
+  issueId: null,
+  settings: DEFAULT_SETTINGS
 }
 
 
@@ -17,8 +33,13 @@ class Octoreactions {
   }
 
   updateState(pathname=window.location.pathname) {
+
     let [_, owner, repo, issues, issueId] = pathname.split('/')
     this.state = Object.assign({}, this.state, {owner, repo, issueId})
+  }
+
+  setSettings(settings=DEFAULT_SETTINGS) {
+    this.state = Object.assign({}, this.state, settings);
   }
 
   updateAndRender() {
@@ -27,6 +48,7 @@ class Octoreactions {
   }
 
   render() {
+    debugger;
     const state = this.state;
     const isIssueList = !state.issueId;
     const self = this;

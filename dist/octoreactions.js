@@ -225,10 +225,26 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var REACTIONS_DEFAULT = {
+  plus: true,
+  minus: false,
+  heart: false,
+  smile: false,
+  tada: false,
+  thinking: false
+};
+
+var CACHE_DEFAULT = 10;
+var DEFAULT_SETTINGS = {
+  reactions: REACTIONS_DEFAULT,
+  cache: CACHE_DEFAULT
+};
+
 var initialState = {
   owner: null,
-  repository: null,
-  issueId: null
+  repo: null,
+  issueId: null,
+  settings: DEFAULT_SETTINGS
 };
 
 var Octoreactions = function () {
@@ -263,6 +279,13 @@ var Octoreactions = function () {
       this.state = Object.assign({}, this.state, { owner: owner, repo: repo, issueId: issueId });
     }
   }, {
+    key: 'setSettings',
+    value: function setSettings() {
+      var settings = arguments.length <= 0 || arguments[0] === undefined ? DEFAULT_SETTINGS : arguments[0];
+
+      this.state = Object.assign({}, this.state, settings);
+    }
+  }, {
     key: 'updateAndRender',
     value: function updateAndRender() {
       this.updateState();
@@ -273,6 +296,7 @@ var Octoreactions = function () {
     value: function render() {
       var _this = this;
 
+      debugger;
       var state = this.state;
       var isIssueList = !state.issueId;
       var self = this;
@@ -354,9 +378,12 @@ jQuery(document).ready(function ($) {
     childList: true
   });
 
-  chrome.runtime.onMessage.addListener(function (request, sender, callback) {
-    console.log(request, sender, callback);
-    debugger;
+  chrome.storage.onChanged.addListener(function (changes, areaName) {
+    if (areaName === 'sync') {
+      chrome.storage.sync.get(['cache', 'reactions'], function (vals) {
+        window.octoreactions.setSettings(vals);
+      });
+    }
   });
 });
 //# sourceMappingURL=octoreactions.js.map

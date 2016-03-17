@@ -18,10 +18,13 @@ jQuery(document).ready(function ($) {
     childList: true,
   })
 
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === 'sync') {
+      chrome.storage.sync.get(['cache', 'reactions'], (vals) => {
+        window.octoreactions.setSettings(vals);
+      })
+    }
 
-    chrome.runtime.onMessage.addListener(function (request, sender, callback) {
-      console.log(request, sender, callback);
-      debugger;
-    })
+  });
 
 });
