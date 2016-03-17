@@ -296,7 +296,6 @@ var Octoreactions = function () {
     value: function render() {
       var _this = this;
 
-      debugger;
       var state = this.state;
       var isIssueList = !state.issueId;
       var self = this;
