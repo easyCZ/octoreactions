@@ -48,7 +48,6 @@ class Octoreactions {
   }
 
   render() {
-    debugger;
     const state = this.state;
     const isIssueList = !state.issueId;
     const self = this;
