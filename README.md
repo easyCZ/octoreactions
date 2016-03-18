@@ -1,7 +1,7 @@
 ![Travis](https://travis-ci.org/easyCZ/octoreactions.svg)
 
 # octoreactions
-Chrome plugin to display Github Issue Reactions
+Chrome plugin to display Github Issue Reactions inspired by [octotree](https://github.com/buunguyen/octotree)
 
 Displays the counts of reactions next to the header of an Issue Detail View and the counts in each row of the Issue List View (see screenshots below).
 
