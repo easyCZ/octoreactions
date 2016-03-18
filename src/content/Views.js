@@ -17,7 +17,7 @@ class View {
 
 class IssueDetail extends View {
 
-  static render({plus}) {
+  static render(reactions) {
 
     const $issueHeader = $(`${ISSUE_HEADER_CONTAINER} ${ISSUE_HEADER_ROW}`);
     const $octoreactions = $(OCTOREACTIONS_CONTAINER);
@@ -25,7 +25,7 @@ class IssueDetail extends View {
     // TODO: Handle more gracefully if exists
     $octoreactions.remove();
 
-    $issueHeader.append(View.getPlusElement(plus));
+    $issueHeader.append(View.getPlusElement(reactions['+1']));
   }
 
 
@@ -33,14 +33,14 @@ class IssueDetail extends View {
 
 class IssueList extends View {
 
-  static render({plus}, $issue) {
+  static render(reactions, $issue) {
     debugger;
     const $commentsContainer = $($issue).find('.issue-comments');
     const octoreactions = $commentsContainer.find(OCTOREACTIONS_CONTAINER);
 
     octoreactions.remove();
 
-    $commentsContainer.append(View.getPlusElement(plus));
+    $commentsContainer.append(View.getPlusElement(reactions['+1']));
   }
 
 }

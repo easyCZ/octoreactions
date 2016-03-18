@@ -45,20 +45,6 @@ class Parser {
     return []
       .map.call(Parser.getReactionsContainers($dom), $container => Parser.getReactionsCountsFromContainer($container))
       .reduce(sumObjects, Object.assign({}, DEFAULT_REACTION_COUNTS))
-
-  }
-
-
-  static parseIssueDetail($dom) {
-    let containers = $dom.find('.comment-reactions-options');
-
-    var plus = 0;
-    containers.each(function (index, container) {
-      var tokens = $(container).find(PLUS_SELECTOR).text().trim().split(' ');
-      return plus += +tokens[tokens.length - 1]
-    })
-
-    return {plus}
   }
 
   static getIssues($dom) {

@@ -61,7 +61,7 @@ class Octoreactions {
         this.getReactionsFromStore(owner, repo, id)
           .then(r => r, () => Async.getIssueDOM(owner, repo, id)
             .then(dom => {
-              let reactions = Parser.parseIssueDetail($(dom));
+              let reactions = Parser.getReactions($(dom));
               self.storage.setIssue(owner, repo, id, reactions)
               return new Promise(resolve => resolve(reactions));
             })
@@ -75,7 +75,7 @@ class Octoreactions {
       const {owner, repo, issueId} = this.state;
       this.getReactionsFromStore(owner, repo, issueId)
         .then(r => r, () => {
-          let reactions = Parser.parseIssueDetail($(document));
+          let reactions = Parser.getReactions($(document));
           this.storage.setIssue(owner, repo, issueId, reactions)
           return new Promise(resolve => resolve(reactions));
         })

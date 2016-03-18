@@ -116,19 +116,6 @@ var Parser = function () {
       }).reduce(sumObjects, Object.assign({}, DEFAULT_REACTION_COUNTS));
     }
   }, {
-    key: 'parseIssueDetail',
-    value: function parseIssueDetail($dom) {
-      var containers = $dom.find('.comment-reactions-options');
-
-      var plus = 0;
-      containers.each(function (index, container) {
-        var tokens = $(container).find(PLUS_SELECTOR).text().trim().split(' ');
-        return plus += +tokens[tokens.length - 1];
-      });
-
-      return { plus: plus };
-    }
-  }, {
     key: 'getIssues',
     value: function getIssues($dom) {
       var issues = [];
@@ -228,9 +215,7 @@ var IssueDetail = function (_View) {
 
   _createClass(IssueDetail, null, [{
     key: 'render',
-    value: function render(_ref) {
-      var plus = _ref.plus;
-
+    value: function render(reactions) {
 
       var $issueHeader = $(ISSUE_HEADER_CONTAINER + ' ' + ISSUE_HEADER_ROW);
       var $octoreactions = $(OCTOREACTIONS_CONTAINER);
@@ -238,7 +223,7 @@ var IssueDetail = function (_View) {
       // TODO: Handle more gracefully if exists
       $octoreactions.remove();
 
-      $issueHeader.append(View.getPlusElement(plus));
+      $issueHeader.append(View.getPlusElement(reactions['+1']));
     }
   }]);
 
@@ -256,16 +241,14 @@ var IssueList = function (_View2) {
 
   _createClass(IssueList, null, [{
     key: 'render',
-    value: function render(_ref2, $issue) {
-      var plus = _ref2.plus;
-
+    value: function render(reactions, $issue) {
       debugger;
       var $commentsContainer = $($issue).find('.issue-comments');
       var octoreactions = $commentsContainer.find(OCTOREACTIONS_CONTAINER);
 
       octoreactions.remove();
 
-      $commentsContainer.append(View.getPlusElement(plus));
+      $commentsContainer.append(View.getPlusElement(reactions['+1']));
     }
   }]);
 
@@ -371,7 +354,7 @@ var Octoreactions = function () {
               return r;
             }, function () {
               return Async.getIssueDOM(owner, repo, id).then(function (dom) {
-                var reactions = Parser.parseIssueDetail($(dom));
+                var reactions = Parser.getReactions($(dom));
                 self.storage.setIssue(owner, repo, id, reactions);
                 return new Promise(function (resolve) {
                   return resolve(reactions);
@@ -392,7 +375,7 @@ var Octoreactions = function () {
           _this.getReactionsFromStore(owner, repo, issueId).then(function (r) {
             return r;
           }, function () {
-            var reactions = Parser.parseIssueDetail($(document));
+            var reactions = Parser.getReactions($(document));
             _this.storage.setIssue(owner, repo, issueId, reactions);
             return new Promise(function (resolve) {
               return resolve(reactions);
