@@ -34,7 +34,8 @@ class IssueDetail extends View {
 class IssueList extends View {
 
   static render({plus}, $issue) {
-    const $commentsContainer = $issue.find('.issue-comments');
+    debugger;
+    const $commentsContainer = $($issue).find('.issue-comments');
     const octoreactions = $commentsContainer.find(OCTOREACTIONS_CONTAINER);
 
     octoreactions.remove();

@@ -259,7 +259,8 @@ var IssueList = function (_View2) {
     value: function render(_ref2, $issue) {
       var plus = _ref2.plus;
 
-      var $commentsContainer = $issue.find('.issue-comments');
+      debugger;
+      var $commentsContainer = $($issue).find('.issue-comments');
       var octoreactions = $commentsContainer.find(OCTOREACTIONS_CONTAINER);
 
       octoreactions.remove();
@@ -364,7 +365,7 @@ var Octoreactions = function () {
 
           issues.forEach(function (_ref) {
             var id = _ref.id;
-            var $issue = _ref.$issue;
+            var issue = _ref.issue;
 
             _this.getReactionsFromStore(owner, repo, id).then(function (r) {
               return r;
@@ -377,7 +378,7 @@ var Octoreactions = function () {
                 });
               });
             }).then(function (reactions) {
-              return IssueList.render(reactions, $issue);
+              return IssueList.render(reactions, issue);
             });
           });
         })();

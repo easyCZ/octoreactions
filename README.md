@@ -15,3 +15,10 @@ Displays the counts of reactions next to the header of a Issue Detail View and t
 
 ### Options View
 ![Options View](./screenshots/options.png)
+
+
+## Development
+1. Navigate to [chrome://extensions](chrome://extensions)
+2. Ensure *Developer Mode* is enabled
+3. Load unpacked extension -> Navigate to the root of the project
+4. Reload an Issues page

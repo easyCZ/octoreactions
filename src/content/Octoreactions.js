@@ -57,7 +57,7 @@ class Octoreactions {
       const issues = Parser.getIssues($(document));
       const {owner, repo} = this.state;
 
-      issues.forEach(({id, $issue}) => {
+      issues.forEach(({id, issue}) => {
         this.getReactionsFromStore(owner, repo, id)
           .then(r => r, () => Async.getIssueDOM(owner, repo, id)
             .then(dom => {
@@ -66,7 +66,7 @@ class Octoreactions {
               return new Promise(resolve => resolve(reactions));
             })
           )
-          .then(reactions => IssueList.render(reactions, $issue))
+          .then(reactions => IssueList.render(reactions, issue))
       })
 
 
