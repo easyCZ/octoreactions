@@ -19,6 +19,9 @@ Because getting a good idea of what Issues are important and have a lot of tract
 ### Options View
 ![Options View](./screenshots/options.png)
 
+## How do I get it?
+Currently cloning the repo and loading the unpacked extensions is the only way. An offical plugin will be available shortly.
+
 
 ## Development
 1. `npm install`
