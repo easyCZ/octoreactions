@@ -26,7 +26,7 @@ Currently cloning the repo and loading the unpacked extensions is the only way. 
 2. Navigate to [chrome://extensions](chrome://extensions)
 3. Ensure *Developer Mode* is enabled
 4. Load unpacked extension -> Navigate to the root of the project
-5. Reload an Issues page
+5. Reload an Issues page (ie. [this](https://github.com/easyCZ/octoreactions/issues))
 
 ## Development
 1. `npm install`
