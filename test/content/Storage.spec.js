@@ -1,5 +1,6 @@
-// import Storage from '../src/Storage';
-// import '../src/Constants';
+import Storage from '../../src/content/Storage';
+import jsdom, { rerequire } from 'mocha-jsdom'
+import { expect } from 'chai'
 
 
 describe('Storage', () => {

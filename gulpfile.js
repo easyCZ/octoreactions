@@ -2,6 +2,7 @@ var gulp = require("gulp");
 var sourcemaps = require("gulp-sourcemaps");
 var babel = require("gulp-babel");
 var concat = require("gulp-concat");
+var removeCode = require('gulp-remove-code');
 
 
 var CONTENT_SCRIPTS = [
@@ -22,6 +23,7 @@ var CSS = ['src/content/octoreactions.css'];
 
 gulp.task('js:content', function () {
   return gulp.src(CONTENT_SCRIPTS)
+    .pipe(removeCode({ test: true }))
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(concat("octoreactions.js"))

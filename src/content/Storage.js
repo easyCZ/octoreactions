@@ -34,3 +34,7 @@ class Storage {
   }
 
 }
+
+//removeIf(test)
+export default Storage;
+//endRemoveIf(test)

@@ -4,7 +4,7 @@
   "description": "Chrome plugin to display Github Issue Reactions",
   "main": "Octoreactions.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-register --require ./test/setup.js --require mock-local-storage --recursive --growl",
+    "test": "mocha --compilers js:babel-register --require mock-local-storage --recursive --growl",
     "tdd": "npm test -- -R dot --watch"
   },
   "repository": {
@@ -25,9 +25,12 @@
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.0",
     "gulp-preprocess": "^2.0.0",
+    "gulp-remove-code": "^1.0.2",
     "gulp-sourcemaps": "^1.6.0",
+    "jquery": "^2.2.2",
     "jsdom": "^8.1.0",
     "mocha": "^2.4.5",
+    "mocha-jsdom": "^1.1.0",
     "mock-local-storage": "^1.0.2"
   }
 }

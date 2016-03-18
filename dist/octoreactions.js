@@ -54,7 +54,26 @@ var Storage = function () {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var REACTIONS_CONTAINER = '.comment-reactions-options';
+var ISSUES_SELECTOR = '.table-list-issues li';
+
+var DEFAULT_REACTION_COUNTS = {
+  '+1': 0, heart: 0, '-1': 0, smile: 0, thinking_face: 0, tada: 0
+};
+
+var sumObjects = function sumObjects(a, b) {
+  var init = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
+  Object.keys(b).forEach(function (key) {
+    if (!a.hasOwnProperty(key)) a[key] = init;
+    a[key] += b[key];
+  });
+  return Object.assign({}, a);
+};
 
 var Parser = function () {
   function Parser() {
@@ -62,6 +81,41 @@ var Parser = function () {
   }
 
   _createClass(Parser, null, [{
+    key: 'getReactionsContainers',
+    value: function getReactionsContainers($dom) {
+      return $dom.find(REACTIONS_CONTAINER);
+    }
+  }, {
+    key: 'getReactionsCountsFromContainer',
+    value: function getReactionsCountsFromContainer($reactionsContainer) {
+      // Reactions are all the button children of the container
+      return [].map.call($reactionsContainer.children, function (reactionButton) {
+
+        // The value attribute contains the reaction type
+        var reactionType = Parser.getReactionType(reactionButton);
+        var reactionValue = Parser.getReactionValue(reactionButton);
+
+        return _defineProperty({}, reactionType, reactionValue);
+      }).reduce(sumObjects, Object.assign({}, DEFAULT_REACTION_COUNTS));
+    }
+  }, {
+    key: 'getReactionType',
+    value: function getReactionType(reactionButton) {
+      return reactionButton.value.split(' ')[0];
+    }
+  }, {
+    key: 'getReactionValue',
+    value: function getReactionValue(reactionButton) {
+      return +reactionButton.textContent.trim().split(' ').pop();
+    }
+  }, {
+    key: 'getReactions',
+    value: function getReactions($dom) {
+      return [].map.call(Parser.getReactionsContainers($dom), function ($container) {
+        return Parser.getReactionsCountsFromContainer($container);
+      }).reduce(sumObjects, Object.assign({}, DEFAULT_REACTION_COUNTS));
+    }
+  }, {
     key: 'parseIssueDetail',
     value: function parseIssueDetail($dom) {
       var containers = $dom.find('.comment-reactions-options');
@@ -78,12 +132,11 @@ var Parser = function () {
     key: 'getIssues',
     value: function getIssues($dom) {
       var issues = [];
-      $('.table-list-issues li').each(function (i, issue) {
-        var $issue = $(issue);
-        var tokens = $issue.find('a').last().attr('href').split('/');
+      $dom.find(ISSUES_SELECTOR).each(function (i, issue) {
+        var href = issue.getElementsByClassName('issue-title-link')[0].href;
         issues.push({
-          id: +tokens[tokens.length - 1],
-          $issue: $issue
+          id: +href.split('/').pop(),
+          issue: issue
         });
       });
 
