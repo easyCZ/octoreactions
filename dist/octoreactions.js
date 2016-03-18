@@ -319,7 +319,9 @@ var Octoreactions = function () {
               return Async.getIssueDOM(owner, repo, id).then(function (dom) {
                 var reactions = Parser.parseIssueDetail($(dom));
                 self.storage.setIssue(owner, repo, id, reactions);
-                return jQuery.Deferred().resolve(reactions);
+                return new Promise(function (resolve) {
+                  return resolve(reactions);
+                });
               });
             }).then(function (reactions) {
               return IssueList.render(reactions, $issue);
@@ -338,7 +340,9 @@ var Octoreactions = function () {
           }, function () {
             var reactions = Parser.parseIssueDetail($(document));
             _this.storage.setIssue(owner, repo, issueId, reactions);
-            return jQuery.Deferred().resolve(reactions);
+            return new Promise(function (resolve) {
+              return resolve(reactions);
+            });
           }).then(function (reactions) {
             return IssueDetail.render(reactions);
           });
@@ -348,8 +352,12 @@ var Octoreactions = function () {
   }, {
     key: 'getReactionsFromStore',
     value: function getReactionsFromStore(owner, repo, issueId) {
-      var reactions = this.storage.getIssue(owner, repo, issueId);
-      return reactions ? jQuery.Deferred().resolve(reactions) : jQuery.Deferred().reject();
+      var _this2 = this;
+
+      return new Promise(function (resolve, reject) {
+        var reactions = _this2.storage.getIssue(owner, repo, issueId);
+        return reactions ? resolve(reactions) : reject();
+      });
     }
   }]);
 

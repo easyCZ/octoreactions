@@ -63,7 +63,7 @@ class Octoreactions {
             .then(dom => {
               let reactions = Parser.parseIssueDetail($(dom));
               self.storage.setIssue(owner, repo, id, reactions)
-              return jQuery.Deferred().resolve(reactions)
+              return new Promise(resolve => resolve(reactions));
             })
           )
           .then(reactions => IssueList.render(reactions, $issue))
@@ -77,17 +77,17 @@ class Octoreactions {
         .then(r => r, () => {
           let reactions = Parser.parseIssueDetail($(document));
           this.storage.setIssue(owner, repo, issueId, reactions)
-          return jQuery.Deferred().resolve(reactions)
+          return new Promise(resolve => resolve(reactions));
         })
         .then(reactions => IssueDetail.render(reactions))
     }
   }
 
   getReactionsFromStore(owner, repo, issueId) {
-    const reactions = this.storage.getIssue(owner, repo, issueId)
-    return reactions
-      ? jQuery.Deferred().resolve(reactions)
-      : jQuery.Deferred().reject();
+    return new Promise((resolve, reject) => {
+      const reactions = this.storage.getIssue(owner, repo, issueId);
+      return reactions ? resolve(reactions) : reject();
+    })
   }
 
 }
