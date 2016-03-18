@@ -3,7 +3,7 @@
 # octoreactions
 Chrome plugin to display Github Issue Reactions
 
-Displays the counts of reactions next to the header of a Issue Detail View and the counts in each row of the Issue List View (see screenshots below).
+Displays the counts of reactions next to the header of an Issue Detail View and the counts in each row of the Issue List View (see screenshots below).
 
 ## Why?
 Because getting a good idea of what Issues are important and have a lot of traction should be easier. GitHub is likely to implement this feature into their searching.
@@ -41,3 +41,6 @@ Please open an issue if you discover any bugs or have feature requests. You're a
 
 ## Pull Requests
 Pull requests are very welcome.
+
+## Thanks
+Thanks to @andretamm and @victor-dumitrescu for testing.
