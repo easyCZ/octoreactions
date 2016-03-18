@@ -31,11 +31,7 @@ Currently cloning the repo and loading the unpacked extensions is the only way. 
 ## Development
 1. `npm install`
 2. `gulp / gulp watch`
-
-3. Navigate to [chrome://extensions](chrome://extensions)
-4. Ensure *Developer Mode* is enabled
-5. Load unpacked extension -> Navigate to the root of the project
-6. Reload an Issues page
+3. Continue with steps outlined in *How do I get it?* above.
 
 ### Unit Tests
 `npm run test` (single run)/ `npm run tdd` (watch for changes)
