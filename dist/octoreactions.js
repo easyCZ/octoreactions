@@ -381,6 +381,7 @@ jQuery(document).ready(function ($) {
     if (areaName === 'sync') {
       chrome.storage.sync.get(['cache', 'reactions'], function (vals) {
         window.octoreactions.setSettings(vals);
+        window.octoreactions.render();
       });
     }
   });

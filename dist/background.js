@@ -7,7 +7,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   }
 
   chrome.tabs.insertCSS(tabId, {
-    file: 'css/octoreactions.css',
+    file: 'dist/octoreactions.css',
     runAt: 'document_start'
   }, function () {
     if (chrome.runtime.lastError) // value of `injected` above: don't inject twice
