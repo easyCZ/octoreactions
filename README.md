@@ -22,6 +22,11 @@ Because getting a good idea of what Issues are important and have a lot of tract
 ## How do I get it?
 Currently cloning the repo and loading the unpacked extensions is the only way. An offical plugin will be available shortly.
 
+1. Clone Repo
+2. Navigate to [chrome://extensions](chrome://extensions)
+3. Ensure *Developer Mode* is enabled
+4. Load unpacked extension -> Navigate to the root of the project
+5. Reload an Issues page
 
 ## Development
 1. `npm install`
@@ -34,3 +39,9 @@ Currently cloning the repo and loading the unpacked extensions is the only way. 
 
 ### Unit Tests
 `npm run test` (single run)/ `npm run tdd` (watch for changes)
+
+## Bugs and Feature Requests
+Please open an issue if you discover any bugs or have feature requests. You're also welcome to submit a pull request.
+
+## Pull Requests
+Pull requests are very welcome.
