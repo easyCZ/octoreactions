@@ -150,6 +150,11 @@ var OCTOREACTIONS_COUNT_CLASS = 'Octoreactions-Count';
 var OCTOREACTIONS_CONTAINER = '.Octoreactions';
 
 var GITHUB_PLUS = '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png">👍</g-emoji>';
+var GITHUB_HEART = '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/2764.png">❤️</g-emoji>';
+var GITHUB_MINUS = '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44e.png">👎</g-emoji>';
+var GITHUB_SMILE = '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png">😄</g-emoji>';
+var GITHUB_THINKING = '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f615.png">😕</g-emoji>';
+var GITHUB_TADA = '<g-emoji class="emoji mr-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f389.png">🎉</g-emoji>';
 
 var EVENT = {
   LOCATION_CHANGE: 'octoreactions:location_change'
@@ -189,15 +194,34 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var ISSUE_HEADER_CONTAINER = '.gh-header-meta';
 var ISSUE_HEADER_ROW = '.flex-table-item-primary';
 
+var REACTION_TO_EMOTICON = {
+  '+1': GITHUB_PLUS,
+  heart: GITHUB_HEART,
+  '-1': GITHUB_MINUS,
+  smile: GITHUB_SMILE,
+  thinking_face: GITHUB_THINKING,
+  tada: GITHUB_TADA
+};
+
 var View = function () {
   function View() {
     _classCallCheck(this, View);
   }
 
   _createClass(View, null, [{
+    key: 'getEmoticon',
+    value: function getEmoticon(type) {
+      return REACTION_TO_EMOTICON[type];
+    }
+  }, {
     key: 'getPlusElement',
     value: function getPlusElement(count) {
-      return '\n      <span class="' + OCTOREACTIONS_CLASS + '">\n        ' + GITHUB_PLUS + '\n        <span class="' + OCTOREACTIONS_COUNT_CLASS + '">' + count + '</span>\n      </span>\n    ';
+      return View.getCountElement('+1', count);
+    }
+  }, {
+    key: 'getCountElement',
+    value: function getCountElement(type, count) {
+      return '\n      <span class="' + OCTOREACTIONS_CLASS + '">\n        ' + View.getEmoticon(type) + '\n        <span class="' + OCTOREACTIONS_COUNT_CLASS + '">' + count + '</span>\n      </span>\n    ';
     }
   }]);
 
@@ -223,7 +247,10 @@ var IssueDetail = function (_View) {
       // TODO: Handle more gracefully if exists
       $octoreactions.remove();
 
-      $issueHeader.append(View.getPlusElement(reactions['+1']));
+      Object.keys(reactions).forEach(function (type) {
+        var elem = View.getCountElement(type, reactions[type]);
+        $issueHeader.append(elem);
+      });
     }
   }]);
 
@@ -263,12 +290,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var REACTIONS_DEFAULT = {
-  plus: true,
-  minus: false,
+  '+1': true,
+  '-1': false,
   heart: false,
   smile: false,
   tada: false,
-  thinking: false
+  thinking_face: false
 };
 
 var CACHE_DEFAULT = 10;
@@ -375,11 +402,19 @@ var Octoreactions = function () {
           _this.getReactionsFromStore(owner, repo, issueId).then(function (r) {
             return r;
           }, function () {
+            debugger;
             var reactions = Parser.getReactions($(document));
             _this.storage.setIssue(owner, repo, issueId, reactions);
             return new Promise(function (resolve) {
               return resolve(reactions);
             });
+          }).then(function (reactions) {
+            var reactionsCopy = Object.assign({}, reactions);
+            Object.keys(reactionsCopy).forEach(function (key) {
+              // debugger;
+              if (!state.settings.reactions[key]) delete reactionsCopy[key];
+            });
+            return reactionsCopy;
           }).then(function (reactions) {
             return IssueDetail.render(reactions);
           });
@@ -425,6 +460,7 @@ jQuery(document).ready(function ($) {
   chrome.storage.onChanged.addListener(function (changes, areaName) {
     if (areaName === 'sync') {
       chrome.storage.sync.get(['cache', 'reactions'], function (vals) {
+        debugger;
         window.octoreactions.setSettings(vals);
         window.octoreactions.render();
       });

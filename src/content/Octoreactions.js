@@ -1,10 +1,10 @@
 const REACTIONS_DEFAULT = {
-  plus: true,
-  minus: false,
+  '+1': true,
+  '-1': false,
   heart: false,
   smile: false,
   tada: false,
-  thinking: false
+  thinking_face: false
 }
 
 const CACHE_DEFAULT = 10
@@ -68,16 +68,25 @@ class Octoreactions {
           )
           .then(reactions => IssueList.render(reactions, issue))
       })
-
-
     }
+
+
     else {
       const {owner, repo, issueId} = this.state;
       this.getReactionsFromStore(owner, repo, issueId)
         .then(r => r, () => {
+          debugger;
           let reactions = Parser.getReactions($(document));
           this.storage.setIssue(owner, repo, issueId, reactions)
           return new Promise(resolve => resolve(reactions));
+        })
+        .then(reactions => {
+          let reactionsCopy = Object.assign({}, reactions);
+          Object.keys(reactionsCopy).forEach(key => {
+            // debugger;
+            if (!state.settings.reactions[key]) delete reactionsCopy[key];
+          })
+          return reactionsCopy
         })
         .then(reactions => IssueDetail.render(reactions))
     }

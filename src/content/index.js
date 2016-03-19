@@ -21,6 +21,7 @@ jQuery(document).ready(function ($) {
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'sync') {
       chrome.storage.sync.get(['cache', 'reactions'], (vals) => {
+        debugger;
         window.octoreactions.setSettings(vals);
         window.octoreactions.render();
       })

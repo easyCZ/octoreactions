@@ -1,12 +1,12 @@
 'use strict';
 
 var REACTIONS_DEFAULT = {
-  plus: true,
-  minus: false,
+  '+1': true,
+  '-1': false,
   heart: false,
   smile: false,
   tada: false,
-  thinking: false
+  thinking_face: false
 };
 
 var CACHE_DEFAULT = 10;
@@ -36,12 +36,12 @@ $reset.addEventListener('click', function () {
 
 $save.addEventListener('click', function () {
   var reactions = {
-    plus: document.getElementById('plus').checked || REACTIONS_DEFAULT.plus,
-    minus: document.getElementById('minus').checked || REACTIONS_DEFAULT.minus,
+    '+1': document.getElementById('+1').checked || REACTIONS_DEFAULT['+1'],
+    '-1': document.getElementById('-1').checked || REACTIONS_DEFAULT['-1'],
     heart: document.getElementById('heart').checked || REACTIONS_DEFAULT.heart,
     smile: document.getElementById('smile').checked || REACTIONS_DEFAULT.smile,
     tada: document.getElementById('tada').checked || REACTIONS_DEFAULT.tada,
-    thinking: document.getElementById('thinking').checked || REACTIONS_DEFAULT.thinking
+    thinking_face: document.getElementById('thinking_face').checked || REACTIONS_DEFAULT.thinking_face
   };
   var cache = document.getElementById('cache').value || CACHE_DEFAULT;
 
