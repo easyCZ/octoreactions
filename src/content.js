@@ -3,9 +3,12 @@ import R from 'ramda';
 
 
 const location = R.identity(window.location.pathname)
-const user = R.compose(R.head, R.tail, R.split('/'));
+const tokenize  = R.pipe(R.split('/'), R.tail); 
 
-// console.log('running');
+const user = R.pipe(tokenize, R.head);
+const repository = R.pipe(tokenize, R.nth(1));
+const issue = R.pipe(tokenize, R.nth(3), R.replace(/#.*/, ''));
+
 
 const GH_PJAX_CONTAINER_SEL = '#js-repo-pjax-container, .context-loader-container, [data-pjax-container]'
 
@@ -20,5 +23,7 @@ const GH_PJAX_CONTAINER_SEL = '#js-repo-pjax-container, .context-loader-containe
 //})
 
 export {
-  user
+  user,
+  repository,
+  issue
 }
