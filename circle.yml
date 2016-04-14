@@ -1,2 +1,4 @@
-
+machine:
+  node:
+    version: 5.5.o
 
