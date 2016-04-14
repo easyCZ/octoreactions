@@ -1,4 +1,5 @@
 ![Travis](https://travis-ci.org/easyCZ/octoreactions.svg)
+[![Circle CI](https://circleci.com/gh/easyCZ/octoreactions/tree/master.svg?style=svg)](https://circleci.com/gh/easyCZ/octoreactions/tree/master)
 
 ## Octoreactions
 Chrome plugin to display Github Issue Reactions inspired by [octotree](https://github.com/buunguyen/octotree)
