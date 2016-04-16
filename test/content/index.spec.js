@@ -1,6 +1,5 @@
 import { expect } from 'chai';
-import jsdom from 'mocha-jsdom';
-import * as content from '../src/content.js';
+import * as content from '../../src/content/index.js';
 
 
 describe('content', () => {
