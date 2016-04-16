@@ -1,4 +1,4 @@
-//import {
+import {
   user,
   repository,
   issue,
@@ -7,7 +7,7 @@
   //renderList,
   //renderDetail,
   //store
-//} from './content/';
+} from './content/';
 import $ from 'jquery';
 import R from 'ramda';
 
