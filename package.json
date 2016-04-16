@@ -33,5 +33,10 @@
     "mock-local-storage": "^1.0.2",
     "ramda": "^0.21",
     "webpack": "^1.12.14"
+  },
+  "dependencies": {
+    "redux": "^3.4.0",
+    "redux-storage": "^4.0.0",
+    "redux-storage-engine-localstorage": "^1.0.2"
   }
 }
