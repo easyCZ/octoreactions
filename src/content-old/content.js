@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { compose, map } from 'ramda';
+import store from './content/store';
 
 
 const GH_PJAX_CONTAINER_SEL = '#js-repo-pjax-container, .context-loader-container, [data-pjax-container]'
@@ -16,27 +17,27 @@ pageChangeObserver.observe($(GH_PJAX_CONTAINER_SEL)[0], {
 })
 
 
-const renderDetail = (owner, repository, issueId) => {
+// const renderDetail = (owner, repository, issueId) => {
 
-  $(document).find()
+//   $(document).find()
 
-}
+// }
 
-const REACTIONS_CONTAINER = '.comment-reactions-options'
+// const REACTIONS_CONTAINER = '.comment-reactions-options'
 
-const jqElem = map($);
-const reactionsContainers = ($dom) => $dom.find(REACTIONS_CONTAINER)
-const reactionButtons = ($dom) => {
-  console.log('$dom', $dom  )
-  return map($dom.find('button'))
-}
-
-
-const reactions = compose(reactionButtons, jqElem, reactionsContainers)
+// const jqElem = map($);
+// const reactionsContainers = ($dom) => $dom.find(REACTIONS_CONTAINER)
+// const reactionButtons = ($dom) => {
+//   console.log('$dom', $dom  )
+//   return map($dom.find('button'))
+// }
 
 
-// console.log(map($)(reactionsContainers)($(document)))
-console.log(reactions($(document)))
+// const reactions = compose(reactionButtons, jqElem, reactionsContainers)
+
+
+// // console.log(map($)(reactionsContainers)($(document)))
+// console.log(reactions($(document)))
 //
 // jQuery(document).ready(function ($) {
 //
