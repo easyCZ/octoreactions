@@ -21,12 +21,22 @@ const isIssueDetail = (location) => {
     && R.compose(R.not, isNaN, parseInt, R.last)(tokens)
 }
 
-const renderDetail = R.identity
+const renderDetail = R.curry((reactions, $dom) => {
+  getPluses($dom)
+    .then(r => console.log(r))
+})
 const renderList = R.identity
 
-const dom = () => Promise.resolve(window.document)
-
 const PJAX_CONTAINER = '#js-repo-pjax-container, .context-loader-container, [data-pjax-container]'
+const dom = () => Promise.resolve($(window.document))
+const getPluses = ($dom) => Promise.resolve(
+  $dom.find(constants.PLUS_SELECTOR)
+    .map((i, e) => e.nextSibling.nodeValue)
+    .get()
+    .map(R.trim)
+    .map(n => parseInt(n))
+)
+
 
 
 const bootstrap = (dom) => {
@@ -41,7 +51,10 @@ const bootstrap = (dom) => {
 
 const octoreactions = R.curry((location, store) => {
   if (isIssueDetail(location)) {
-    console.log('detail', user(location), repository(location), issue(location));
+    const renderReactions = renderDetail({ thumbs: 3 })
+
+    dom().then(renderReactions)
+
   }
   else if (isIssueList(location)) {
    console.log(user(location), repository(location));
