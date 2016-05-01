@@ -7,12 +7,27 @@ import {
 } from './util.js'
 
 
-export const octoreactions = ((store) => (location) => {
+/* Octoreactions entry
+ *
+ * @param {string} URL Location Pathname
+ */
+const octoreactions = ((store) => (location) => {
   const { user, repo, issue } = getIdentifiers(location)
   console.log(user, repo, issue);
+
+  if (isIssueDetailView(location)) {
+    // getReactions(store)
+    //   .then(renderDetail)
+  }
+
+  else if (isIssueListView(location)) {
+
+  }
+
 })(store)
 
 
 export {
-  loadLocalStorage
+  loadLocalStorage,
+  octoreactions
 }
