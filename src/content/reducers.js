@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import R from 'ramda';
 
 
 export function reactions(state={}, action) {

@@ -16,8 +16,9 @@ const octoreactions = ((store) => (location) => {
   console.log(user, repo, issue);
 
   if (isIssueDetailView(location)) {
-    // getReactions(store)
-    //   .then(renderDetail)
+
+
+
   }
 
   else if (isIssueListView(location)) {

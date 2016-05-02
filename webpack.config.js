@@ -4,7 +4,6 @@ module.exports = {
 
   entry: {
     content: './src/content.js',
-    background: './src/background.js',
     options: './src/options.js'
   },
 
