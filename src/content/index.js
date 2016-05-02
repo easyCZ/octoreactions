@@ -22,7 +22,7 @@ const octoreactions = ((store) => (location) => {
   }
 
   else if (isIssueListView(location)) {
-    console.log(user, repo, issue);
+    console.log(user, repo);
 
   }
 
