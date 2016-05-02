@@ -33,3 +33,14 @@ export function isIssueListView(pathname) {
 export function isIssueDetailView(pathname) {
   return pathname.split('/').slice(1).length === 4
 }
+
+/* Generate a key for a user, repo, issue tuple
+ *
+ * @param {string} user
+ * @param {string} repo
+ * @param {number} issue
+ * @returns {string} identifier
+ */
+export function getKey(user, repo, issue) {
+  return `${user}:${repo}:${issue}`
+}

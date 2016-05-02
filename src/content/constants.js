@@ -1,3 +1,7 @@
+// Redux Action Types
+export const SET_REACTIONS = 'SET_REACTIONS';
+
+// GitHub reactions selectors
 export const PLUS_SELECTOR = 'g-emoji[alias~="+1"].mr-1'
 export const MINUS_SELECTOR = 'g-emoji[alias~="-1"].mr-1'
 export const SMILE_SELECTOR = 'g-emoji[alias~="smile"].mr-1'

@@ -3,12 +3,16 @@ import { combineReducers } from 'redux';
 
 export function reactions(state={}, action) {
 
-  switch (action.type) {
+  return state;
 
-    case 'TEST2':
-      return {test: 'TEST2'};
+}
 
-  }
+const DEFAULT_SETTINGS = {
+  cache: 10,
+  reactions: ['+1']
+}
+
+export function settings(state=DEFAULT_SETTINGS, action) {
 
   return state;
 
