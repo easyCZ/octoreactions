@@ -24,15 +24,17 @@ Because getting a good idea of what Issues are important and have a lot of tract
 Currently cloning the repo and loading the unpacked extensions is the only way. An offical plugin will be available shortly.
 
 1. Clone Repo
-2. Navigate to [chrome://extensions](chrome://extensions)
-3. Ensure *Developer Mode* is enabled
-4. Load unpacked extension -> Navigate to the root of the project
+2. Run `npm install`
+3. Run `npm run build`
+4. Navigate to [chrome://extensions](chrome://extensions)
+5. Ensure *Developer Mode* is enabled
+6. Load unpacked extension -> Navigate to `<project>/build`
 5. Reload an Issues page (ie. [this](https://github.com/easyCZ/octoreactions/issues))
 
 ### Development
 1. `npm install`
-2. `gulp / gulp watch`
-3. Continue with steps outlined in *How do I get it?* above.
+2. `npm run dev`
+3. Continue with step 4 in *How do I get it?* above.
 
 #### Unit Tests
 `npm run test` (single run)/ `npm run tdd` (watch for changes)
