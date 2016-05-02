@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
 
@@ -15,7 +16,12 @@ module.exports = {
   devtool: 'source-map',
 
   plugins: [
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.UglifyJsPlugin(),
+    new HtmlWebpackPlugin({
+      filename: 'options.html',
+      template: 'src/options/options.html',
+      chunks: ['options']
+    })
   ],
 
   module: {
@@ -26,6 +32,8 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader'
       },
+
+
     ]
   }
 
