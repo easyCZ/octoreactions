@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import {
   setReactions
-} from '../../src/content/Actions.js';
+} from '../../src/content/actions.js';
 import {
   reactions as reactionsReducer,
   reactionsDefaultState

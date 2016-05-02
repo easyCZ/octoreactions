@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as actions from '../../src/content/Actions.js';
+import * as actions from '../../src/content/actions.js';
 import { SET_REACTIONS } from '../../src/content/constants';
 
 
