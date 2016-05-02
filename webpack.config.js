@@ -24,7 +24,8 @@ module.exports = {
       chunks: ['options']
     }),
     new CopyWebpackPlugin([
-      { from: 'manifest.json', to: 'manifest.json'}
+      { from: 'manifest.json', to: 'manifest.json'},
+      { from: 'icons/*.png'}
     ])
   ],
 
