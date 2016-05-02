@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 
@@ -21,7 +22,10 @@ module.exports = {
       filename: 'options.html',
       template: 'src/options/options.html',
       chunks: ['options']
-    })
+    }),
+    new CopyWebpackPlugin([
+      { from: 'manifest.json', to: 'manifest.json'}
+    ])
   ],
 
   module: {
