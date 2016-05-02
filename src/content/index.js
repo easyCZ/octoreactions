@@ -13,15 +13,16 @@ import {
  */
 const octoreactions = ((store) => (location) => {
   const { user, repo, issue } = getIdentifiers(location)
-  console.log(user, repo, issue);
+
 
   if (isIssueDetailView(location)) {
-
+    console.log(user, repo, issue);
 
 
   }
 
   else if (isIssueListView(location)) {
+    console.log(user, repo, issue);
 
   }
 
