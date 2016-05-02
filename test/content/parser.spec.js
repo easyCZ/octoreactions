@@ -7,7 +7,7 @@ import { parseIssue } from '../../src/content/parser.js';
 
 describe('Parser', () => {
 
-  describe('Issue Detail', () => {
+  describe('Issue Detail with reactions', () => {
 
     const detailPath = path.resolve(__dirname, './html/issue-detail.html');
     const issueDetailHTML = fs.readFileSync(detailPath, 'utf-8');
@@ -24,6 +24,24 @@ describe('Parser', () => {
         thinking: 1,
         tada: 2,
         '+1': 3
+      })
+    })
+
+  })
+
+  describe('Issue Detail without reactions', () => {
+
+    const detailPath = path.resolve(__dirname, './html/issue-detail-no-reactions.html');
+    const issueDetailHTML = fs.readFileSync(detailPath, 'utf-8');
+
+    it('should retrieve 0 counts for all types gracefully', () => {
+      expect(parseIssue($(issueDetailHTML))).to.be.eql({
+        heart: 0,
+        '-1': 0,
+        smile: 0,
+        thinking: 0,
+        tada: 0,
+        '+1': 0
       })
     })
 
