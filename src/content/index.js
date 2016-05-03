@@ -6,13 +6,20 @@ import {
   isIssueDetailView,
   getKey
 } from './util.js'
+import { parseIssue } from './parser.js';
+import { setReactions } from './actions.js';
 
 
+function getIssueReactions(reactionsStore, key, expiration) {
+  let reactions = reactionsStore[key];
 
-function getIssueReactions(reactionsStore, user, repo, issue) {
-  const key = getKey(user, repo, issue);
-  const reactions = reactionsStore[key];
-
+  if (reactions) {
+    const { timestamp } = reactions;
+    const now = Date.now();
+    if (timestamp + expiration * 60 * 1000 < now) {
+      return Promise.reject()
+    }
+  }
   return reactions
     ? Promise.resolve(reactions)
     : Promise.reject()
@@ -25,12 +32,24 @@ function getIssueReactions(reactionsStore, user, repo, issue) {
  */
 const octoreactions = ((store) => (location) => {
   const { user, repo, issue } = getIdentifiers(location)
-  const reactions = store.getState().reactions;
+  const reactionsStore = store.getState().reactions;
 
   if (isIssueDetailView(location)) {
 
-    getIssueReactions(reactions, user, repo, issue)
-      .then(r => console.log(r));
+    const key = getKey(user, repo, issue)
+
+    getIssueReactions(reactionsStore, key, store.getState().settings.cache)
+      .then(r => r, () => {
+        console.log('parsing');
+        const reactions = setReactions(key, parseIssue(document));
+        store.dispatch(reactions)
+        return reactions.payload;
+      })
+      .then(reactions => {
+        // TODO: Render reactions
+        console.log('reactions', reactions);
+      })
+      .catch(err => console.error(err));
 
 
   }

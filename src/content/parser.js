@@ -10,8 +10,8 @@ const parseReaction = (dom) => (selector) => $(dom)
   .reduce((a, b) => a + b, 0)
 
 
-export function parseIssue($dom) {
-  const parser = parseReaction($dom.find(DISCUSSION_BUCKET))
+export function parseIssue(dom) {
+  const parser = parseReaction($(dom).find(DISCUSSION_BUCKET))
   const counts = Object.keys(REACTION_SELECTORS)
     .map(key => {
       const value = REACTION_SELECTORS[key]

@@ -17,7 +17,7 @@ module.exports = {
   devtool: 'source-map',
 
   plugins: [
-    new webpack.optimize.UglifyJsPlugin(),
+    // new webpack.optimize.UglifyJsPlugin(),
     new HtmlWebpackPlugin({
       filename: 'options.html',
       template: 'src/options/options.html',
